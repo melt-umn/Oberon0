@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# invoke as               ./silver-compile
+# or add arguments, like  ./silver-compile --clean
+
+export GRAMMAR_PATH="../../../"
+
+silver -o oberon0.jar $@ edu:umn:cs:melt:Oberon0:artifacts:A5
+
