@@ -1,0 +1,20 @@
+#!/bin/bash
+
+set -eu
+
+if ! which silver > /dev/null; then
+  echo "Requires a silver installation to use. ('silver' should be in PATH)"
+  echo "See https://github.com/melt-umn/silver/"
+  echo "Or http://melt.cs.umn.edu/ for more information."
+  exit 1
+fi
+
+silver $@ -o oberon0_a1.jar edu:umn:cs:melt:Oberon0:artifacts:A1
+silver $@ -o oberon0_a2a.jar edu:umn:cs:melt:Oberon0:artifacts:A2a
+silver $@ -o oberon0_a2b.jar edu:umn:cs:melt:Oberon0:artifacts:A2b
+silver $@ -o oberon0_a3.jar edu:umn:cs:melt:Oberon0:artifacts:A3
+silver $@ -o oberon0_a4.jar edu:umn:cs:melt:Oberon0:artifacts:A4
+silver $@ -o oberon0_a5.jar edu:umn:cs:melt:Oberon0:artifacts:A5
+
+echo "Success"
+
