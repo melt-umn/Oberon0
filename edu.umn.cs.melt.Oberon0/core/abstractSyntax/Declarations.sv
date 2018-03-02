@@ -22,12 +22,12 @@ synthesized attribute vars :: [Pair<String Decorated Decl>];  --T2
 function ppDecls
 pp:Document ::= pre::String dcls::[Decorated Decl]
 {
-  return pp:concat([pp:text(pre), pp:box(pp:implode(pp:cat(pp:semi(), pp:line()), map((.pp), dcls))), pp:semi()]);
+  return pp:ppConcat([pp:text(pre), pp:box(pp:ppImplode(pp:cat(pp:semi(), pp:line()), map((.pp), dcls))), pp:semi()]);
 }
 abstract production seqDecl
 d::Decl ::= d1::Decl d2::Decl
 {
-  d.pp = pp:implode(pp:line(), pppieces);
+  d.pp = pp:ppImplode(pp:line(), pppieces);
   
   local consts :: [Decorated Decl] = filter(isConstDcl, d.individualDcls);
   local types :: [Decorated Decl] = filter(isTypeDcl, d.individualDcls);
@@ -67,7 +67,7 @@ d::Decl ::=
 abstract production constDecl
 d::Decl ::= id::Name e::Expr
 {
-  d.pp = pp:concat([id.pp, pp:text(" = "), e.pp]);
+  d.pp = pp:ppConcat([id.pp, pp:text(" = "), e.pp]);
 
   --T2-start  
   d.individualDcls = [d];
@@ -95,7 +95,7 @@ d::Decl ::= id::Name e::Expr
 abstract production typeDecl
 d::Decl ::= id::TypeName t::TypeExpr
 {
-  d.pp = pp:concat([id.pp, pp:text(" = "), t.pp]);
+  d.pp = pp:ppConcat([id.pp, pp:text(" = "), t.pp]);
   --T2-start
   d.individualDcls = [d];
   d.vars = [];
@@ -118,7 +118,7 @@ d::Decl ::= id::TypeName t::TypeExpr
 abstract production varDecl
 d::Decl ::= id::Name t::TypeExpr
 {
-  d.pp = pp:concat([id.pp, pp:text(" : "), t.pp]);
+  d.pp = pp:ppConcat([id.pp, pp:text(" : "), t.pp]);
 
   --T2-start
   d.individualDcls = [d];
@@ -148,7 +148,7 @@ d::Decl ::= id::Name t::TypeExpr
 abstract production varDecls
 d::Decl ::= ids::IdList t::TypeExpr
 {
-  d.pp = pp:concat([ids.pp, pp:text(" : "), t.pp]);
+  d.pp = pp:ppConcat([ids.pp, pp:text(" : "), t.pp]);
 
   --T2-start
   d.individualDcls = [d];
@@ -195,7 +195,7 @@ ids::IdList ::= id::Name
 abstract production idListCons
 ids::IdList ::= id::Name rest::IdList
 {
-  ids.pp = pp:concat([id.pp, pp:text(", "), rest.pp]);
+  ids.pp = pp:ppConcat([id.pp, pp:text(", "), rest.pp]);
   --T2-start
   ids.idVarDecls = seqDecl(ids.idVarDeclProd(id, ids.idVarDeclTypeExpr, id.location),
                            rest.idVarDecls, location=ids.location); 

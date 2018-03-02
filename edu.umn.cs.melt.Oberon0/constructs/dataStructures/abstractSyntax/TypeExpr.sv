@@ -11,7 +11,7 @@ exports edu:umn:cs:melt:Oberon0:constructs:dataStructures:typeChecking
 abstract production arrayTypeExpr
 t::TypeExpr ::= e::Expr ty::TypeExpr
 {
-  t.pp = pp:concat([pp:text("ARRAY "), e.pp, pp:text(" OF "), ty.pp]);
+  t.pp = pp:ppConcat([pp:text("ARRAY "), e.pp, pp:text(" OF "), ty.pp]);
   
   t.errors := e.errors ++ ty.errors;  --T2
 }
@@ -19,7 +19,7 @@ t::TypeExpr ::= e::Expr ty::TypeExpr
 abstract production recordTypeExpr
 t::TypeExpr ::= f::Decl
 {
-  t.pp = pp:concat([pp:text("RECORD "), pp:implode(pp:text("; "), map((.pp), f.individualDcls)), pp:text(" END")]);
+  t.pp = pp:ppConcat([pp:text("RECORD "), pp:ppImplode(pp:text("; "), map((.pp), f.individualDcls)), pp:text(" END")]);
   
   t.errors := f.errors;  --T2
   

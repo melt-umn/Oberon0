@@ -26,8 +26,8 @@ d::Decl ::= id::Name formals::Decl locals::Decl s::Stmt endid::Name
   d.passedByValue = error("Should never ask for this as this is not a proc decl - procDecl");
   --T2-end
 
-  d.pp = pp:concat([
-    pp:text("PROCEDURE "), id.pp, pp:parens(pp:implode(pp:text("; "), map((.pp), formals.individualDcls))), pp:semi(),
+  d.pp = pp:ppConcat([
+    pp:text("PROCEDURE "), id.pp, pp:parens(pp:ppImplode(pp:text("; "), map((.pp), formals.individualDcls))), pp:semi(),
       pp:nestlines(2, locals.pp),
     pp:text("BEGIN"), 
       pp:nestlines(2, s.pp),

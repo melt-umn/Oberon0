@@ -10,13 +10,13 @@ imports silver:langutil:pp as pp;
 abstract production arrayType
 t::TypeRep ::= e::Decorated Expr ty::TypeRep uniqueid::Integer
 {
-  t.pp = pp:concat([pp:text("ARRAY "), e.pp, pp:text(" OF "), ty.pp]);
+  t.pp = pp:ppConcat([pp:text("ARRAY "), e.pp, pp:text(" OF "), ty.pp]);
 }
 
 abstract production recordType
 t::TypeRep ::= f::Decorated Decl uniqueid::Integer
 {
-  t.pp = pp:concat([pp:text("RECORD "), pp:implode(pp:text("; "), map((.pp), f.individualDcls)), pp:text(" END")]);
+  t.pp = pp:ppConcat([pp:text("RECORD "), pp:ppImplode(pp:text("; "), map((.pp), f.individualDcls)), pp:text(" END")]);
 }
 
 aspect function check

@@ -18,7 +18,7 @@ s::Stmt ::= f::Name a::Exprs
 abstract production call
 s::Stmt ::= f::Name a::Exprs
 {
-  s.pp = pp:concat([f.pp, pp:parens(a.pp)]);
+  s.pp = pp:ppConcat([f.pp, pp:parens(a.pp)]);
   
   s.errors := f.errors ++ a.errors;  --T2
 }
@@ -35,7 +35,7 @@ e::Exprs ::=
 abstract production consExprs
 es::Exprs ::= e::Expr rest::Exprs
 {
-  es.pp = pp:concat([e.pp,
+  es.pp = pp:ppConcat([e.pp,
     case rest of 
     | nilExprs() -> pp:notext()
     | _ -> pp:cat(pp:text(", "), rest.pp)
@@ -48,13 +48,13 @@ es::Exprs ::= e::Expr rest::Exprs
 abstract production readCall
 s::Stmt ::= f::Name e::Exprs
 {
-  s.pp = pp:concat([pp:text("Read"), pp:parens(e.pp)]);
+  s.pp = pp:ppConcat([pp:text("Read"), pp:parens(e.pp)]);
   s.errors := e.errors;  --T2
 }
 abstract production writeCall
 s::Stmt ::= f::Name e::Exprs
 {
-  s.pp = pp:concat([pp:text("Write"), pp:parens(e.pp)]);
+  s.pp = pp:ppConcat([pp:text("Write"), pp:parens(e.pp)]);
   s.errors := e.errors;  --T2
 }
 abstract production writeLnCall

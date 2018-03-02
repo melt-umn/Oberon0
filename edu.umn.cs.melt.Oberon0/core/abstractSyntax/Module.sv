@@ -6,7 +6,7 @@ nonterminal Module with location, pp,
 abstract production module
 m::Module ::= id::Name ds::Decl ss::Stmt endid::Name 
 {
-  m.pp = pp:concat([
+  m.pp = pp:ppConcat([
     pp:text("MODULE "), id.pp, pp:semi(),
       pp:nestlines(2, ds.pp),
     pp:text("BEGIN"), 

@@ -11,7 +11,7 @@ exports edu:umn:cs:melt:Oberon0:constructs:controlFlow:typeChecking
 abstract production forStmt
 s::Stmt ::= id::Name lower::Expr upper::Expr body::Stmt
 {
-  s.pp = pp:concat([
+  s.pp = pp:ppConcat([
     pp:text("FOR "), id.pp, pp:text(" := "), lower.pp, pp:text(" TO "), upper.pp, 
     pp:text(" DO"),
       pp:nestlines(2, body.pp),
@@ -23,7 +23,7 @@ s::Stmt ::= id::Name lower::Expr upper::Expr body::Stmt
 abstract production forStmtBy
 s::Stmt ::= id::Name lower::Expr upper::Expr step::Expr body::Stmt
 {
-  s.pp = pp:concat([
+  s.pp = pp:ppConcat([
     pp:text("FOR "), id.pp, pp:text(" := "), lower.pp, pp:text(" TO "), upper.pp, 
     pp:text(" BY "), step.pp, pp:text(" DO"),
       pp:nestlines(2, body.pp),

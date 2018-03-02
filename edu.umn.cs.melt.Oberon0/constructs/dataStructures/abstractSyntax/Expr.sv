@@ -13,7 +13,7 @@ e::LExpr ::= array::LExpr index::Expr
 abstract production fieldAccess
 e::LExpr ::= rec::LExpr fld::Name
 {
-  e.pp = pp:concat([rec.pp, pp:text("."), fld.pp]);
+  e.pp = pp:ppConcat([rec.pp, pp:text("."), fld.pp]);
   
   e.errors := rec.errors;  --T2
   e.evalConstInt = nothing();  --T2

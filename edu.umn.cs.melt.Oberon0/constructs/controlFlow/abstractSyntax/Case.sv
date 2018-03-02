@@ -3,7 +3,7 @@ grammar edu:umn:cs:melt:Oberon0:constructs:controlFlow:abstractSyntax;
 abstract production caseStmt
 s::Stmt ::= e::Expr cs::Cases
 {
-  s.pp = pp:concat([
+  s.pp = pp:ppConcat([
     pp:text("CASE "), e.pp, pp:text(" OF"), pp:line(),
     cs.pp, pp:line(),
     pp:text("END")]);
@@ -45,7 +45,7 @@ cs::Cases ::= c::Case
 abstract production caseCons
 cs::Cases ::= c::Case rest::Cases
 {
-  cs.pp = pp:concat([
+  cs.pp = pp:ppConcat([
     c.pp, pp:line(),
     case rest of 
     | caseOne(caseElse(_)) -> rest.pp
@@ -63,7 +63,7 @@ nonterminal Case with location, env, errors, pp, caseTranslation<Stmt>, caseExpr
 abstract production caseClause
 c::Case ::= cls::CaseLabels s::Stmt
 {
-  c.pp = pp:concat([cls.pp, pp:text(" : "), s.pp]);
+  c.pp = pp:ppConcat([cls.pp, pp:text(" : "), s.pp]);
   
   c.caseTranslation = cond(cls.caseTranslation, s, c.caseNext, location=c.location);
   c.errors := cls.errors ++ s.errors;  --T2
@@ -90,7 +90,7 @@ cls::CaseLabels ::= cl::CaseLabel
 abstract production consCaseLabel
 cls::CaseLabels ::= cl::CaseLabel rest::CaseLabels
 {
-  cls.pp = pp:concat([cl.pp, pp:text(", "), rest.pp]);
+  cls.pp = pp:ppConcat([cl.pp, pp:text(", "), rest.pp]);
   
   cls.caseTranslation = or(cl.caseTranslation, rest.caseTranslation, location=cls.location);
   cls.errors := cl.errors ++ rest.errors;  --T2
@@ -114,7 +114,7 @@ cl::CaseLabel ::= e::Expr
 abstract production caseLabelRange
 cl::CaseLabel ::= l::Expr u::Expr
 {
-  cl.pp = pp:concat([l.pp, pp:text(".."), u.pp]);
+  cl.pp = pp:ppConcat([l.pp, pp:text(".."), u.pp]);
   
   cl.caseTranslation = and(gte(cl.caseExpr, l, location=l.location), lte(cl.caseExpr, u, location=u.location), location=cl.location);
 

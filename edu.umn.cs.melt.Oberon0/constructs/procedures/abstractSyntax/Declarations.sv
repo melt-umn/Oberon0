@@ -18,7 +18,7 @@ synthesized attribute funs :: [Pair<String Decorated Decl>] occurs on Decl;  --T
 abstract production paramDeclValue
 d::Decl ::= id::Name t::TypeExpr
 {
-  d.pp = pp:concat([id.pp, pp:text(" : "), t.pp]);
+  d.pp = pp:ppConcat([id.pp, pp:text(" : "), t.pp]);
   --T2-start
    d.passedByValue = true;
    d.individualDcls = [d];
@@ -32,7 +32,7 @@ d::Decl ::= id::Name t::TypeExpr
 abstract production paramDeclReference
 d::Decl ::= id::Name t::TypeExpr
 {
-  d.pp = pp:concat([pp:text("VAR "), id.pp, pp:text(" : "), t.pp]);
+  d.pp = pp:ppConcat([pp:text("VAR "), id.pp, pp:text(" : "), t.pp]);
   --T2-start
    d.passedByValue = false;
    d.individualDcls = [d];

@@ -6,7 +6,7 @@ nonterminal Stmt with location, pp,
 abstract production seqStmt
 s::Stmt ::= s1::Stmt s2::Stmt
 {
-  s.pp = pp:concat([s1.pp, pp:semi(), pp:line(), s2.pp]);
+  s.pp = pp:ppConcat([s1.pp, pp:semi(), pp:line(), s2.pp]);
   
   s.errors := s1.errors ++ s2.errors;  --T2
 }
@@ -23,7 +23,7 @@ s::Stmt ::=
 abstract production assign
 s::Stmt ::= l::LExpr e::Expr
 {
-  s.pp = pp:concat([l.pp, pp:text(" := "), e.pp]);
+  s.pp = pp:ppConcat([l.pp, pp:text(" := "), e.pp]);
   --T2-start  
   s.errors := l.errors ++ e.errors;
   s.errors <- if !l.evalConstInt.isJust then []
@@ -34,12 +34,12 @@ s::Stmt ::= l::LExpr e::Expr
 abstract production cond
 s::Stmt ::= c::Expr t::Stmt e::Stmt
 {
-  s.pp = pp:concat([pp:text("IF "), c.pp, pp:text(" THEN"),
+  s.pp = pp:ppConcat([pp:text("IF "), c.pp, pp:text(" THEN"),
     pp:nestlines(2, t.pp),
     case e of 
     | skip() -> pp:text("END")
     | cond(_,_,_) -> pp:cat(pp:text("ELS"), e.pp)
-    | _ -> pp:concat([pp:text("ELSE"), pp:nestlines(2, e.pp), pp:text("END")])
+    | _ -> pp:ppConcat([pp:text("ELSE"), pp:nestlines(2, e.pp), pp:text("END")])
     end]);
   
   s.errors := c.errors ++ t.errors ++ e.errors;  --T2
@@ -48,7 +48,7 @@ s::Stmt ::= c::Expr t::Stmt e::Stmt
 abstract production while
 s::Stmt ::= con::Expr body::Stmt
 {
-  s.pp = pp:concat([pp:text("WHILE "), con.pp, pp:text(" DO"),
+  s.pp = pp:ppConcat([pp:text("WHILE "), con.pp, pp:text(" DO"),
            pp:nestlines(2, body.pp),
          pp:text("END")]);
   

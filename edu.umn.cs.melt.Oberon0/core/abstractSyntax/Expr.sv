@@ -54,7 +54,7 @@ e::Expr ::= n::String
 abstract production mult
 e::Expr ::= e1::Expr e2::Expr
 {
-  e.pp = pp:parens(pp:concat([e1.pp, pp:text(" * "), e2.pp]));
+  e.pp = pp:parens(pp:ppConcat([e1.pp, pp:text(" * "), e2.pp]));
 
   --T2-start  
   e.errors := e1.errors ++ e2.errors;
@@ -69,7 +69,7 @@ e::Expr ::= e1::Expr e2::Expr
 abstract production div
 e::Expr ::= e1::Expr e2::Expr
 {
-  e.pp = pp:parens(pp:concat([e1.pp, pp:text(" DIV "), e2.pp]));
+  e.pp = pp:parens(pp:ppConcat([e1.pp, pp:text(" DIV "), e2.pp]));
 
   --T2-start  
   e.errors := e1.errors ++ e2.errors;
@@ -85,7 +85,7 @@ e::Expr ::= e1::Expr e2::Expr
 abstract production mod
 e::Expr ::= e1::Expr e2::Expr
 {
-  e.pp = pp:parens(pp:concat([e1.pp, pp:text(" MOD "), e2.pp]));
+  e.pp = pp:parens(pp:ppConcat([e1.pp, pp:text(" MOD "), e2.pp]));
 
   --T2-start  
   e.errors := e1.errors ++ e2.errors;
@@ -101,7 +101,7 @@ e::Expr ::= e1::Expr e2::Expr
 abstract production add
 e::Expr ::= e1::Expr e2::Expr
 {
-  e.pp = pp:parens(pp:concat([e1.pp, pp:text(" + "), e2.pp]));
+  e.pp = pp:parens(pp:ppConcat([e1.pp, pp:text(" + "), e2.pp]));
   
   --T2-start
   e.errors := e1.errors ++ e2.errors;
@@ -116,7 +116,7 @@ e::Expr ::= e1::Expr e2::Expr
 abstract production sub
 e::Expr ::= e1::Expr e2::Expr
 {
-  e.pp = pp:parens(pp:concat([e1.pp, pp:text(" - "), e2.pp]));
+  e.pp = pp:parens(pp:ppConcat([e1.pp, pp:text(" - "), e2.pp]));
   
   --T2-start
   e.errors := e1.errors ++ e2.errors;
@@ -133,7 +133,7 @@ e::Expr ::= e1::Expr e2::Expr
 abstract production not
 e::Expr ::= e1::Expr
 {
-  e.pp = (pp:concat([pp:text("~"), e1.pp]));
+  e.pp = (pp:ppConcat([pp:text("~"), e1.pp]));
   
   e.errors := e1.errors;  --T2
 
@@ -143,7 +143,7 @@ e::Expr ::= e1::Expr
 abstract production and
 e::Expr ::= e1::Expr e2::Expr
 {
-  e.pp = pp:parens(pp:concat([e1.pp, pp:text(" & "), e2.pp]));
+  e.pp = pp:parens(pp:ppConcat([e1.pp, pp:text(" & "), e2.pp]));
   
   e.errors := e1.errors ++ e2.errors;  --T2
 
@@ -153,7 +153,7 @@ e::Expr ::= e1::Expr e2::Expr
 abstract production or
 e::Expr ::= e1::Expr e2::Expr
 {
-  e.pp = pp:parens(pp:concat([e1.pp, pp:text(" OR "), e2.pp]));
+  e.pp = pp:parens(pp:ppConcat([e1.pp, pp:text(" OR "), e2.pp]));
   
   e.errors := e1.errors ++ e2.errors;  --T2
 
@@ -165,7 +165,7 @@ e::Expr ::= e1::Expr e2::Expr
 abstract production eq
 e::Expr ::= e1::Expr e2::Expr
 {
-  e.pp = pp:parens(pp:concat([e1.pp, pp:text(" = "), e2.pp]));
+  e.pp = pp:parens(pp:ppConcat([e1.pp, pp:text(" = "), e2.pp]));
   
   e.errors := e1.errors ++ e2.errors;  --T2
 
@@ -175,7 +175,7 @@ e::Expr ::= e1::Expr e2::Expr
 abstract production neq
 e::Expr ::= e1::Expr e2::Expr
 {
-  e.pp = pp:parens(pp:concat([e1.pp, pp:text(" # "), e2.pp]));
+  e.pp = pp:parens(pp:ppConcat([e1.pp, pp:text(" # "), e2.pp]));
   
   e.errors := e1.errors ++ e2.errors;  --T2
 
@@ -185,7 +185,7 @@ e::Expr ::= e1::Expr e2::Expr
 abstract production lt
 e::Expr ::= e1::Expr e2::Expr
 {
-  e.pp = pp:parens(pp:concat([e1.pp, pp:text(" < "), e2.pp]));
+  e.pp = pp:parens(pp:ppConcat([e1.pp, pp:text(" < "), e2.pp]));
   
   e.errors := e1.errors ++ e2.errors;  --T2
 
@@ -195,7 +195,7 @@ e::Expr ::= e1::Expr e2::Expr
 abstract production gt
 e::Expr ::= e1::Expr e2::Expr
 {
-  e.pp = pp:parens(pp:concat([e1.pp, pp:text(" > "), e2.pp]));
+  e.pp = pp:parens(pp:ppConcat([e1.pp, pp:text(" > "), e2.pp]));
   
   e.errors := e1.errors ++ e2.errors;  --T2
 
@@ -205,7 +205,7 @@ e::Expr ::= e1::Expr e2::Expr
 abstract production lte
 e::Expr ::= e1::Expr e2::Expr
 {
-  e.pp = pp:parens(pp:concat([e1.pp, pp:text(" <= "), e2.pp]));
+  e.pp = pp:parens(pp:ppConcat([e1.pp, pp:text(" <= "), e2.pp]));
   
   e.errors := e1.errors ++ e2.errors; --T2
 
@@ -215,7 +215,7 @@ e::Expr ::= e1::Expr e2::Expr
 abstract production gte
 e::Expr ::= e1::Expr e2::Expr
 {
-  e.pp = pp:parens(pp:concat([e1.pp, pp:text(" >= "), e2.pp]));
+  e.pp = pp:parens(pp:ppConcat([e1.pp, pp:text(" >= "), e2.pp]));
   
   e.errors := e1.errors ++ e2.errors; --T2
 
