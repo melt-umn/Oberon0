@@ -7,7 +7,7 @@ melt.setProperties(silverBase: true)
 node {
 try {
 
-  def newenv = melt.getSilverEnv()
+  def newenv = silver.getSilverEnv()
 
   stage ("Checkout") {
     checkout scm
