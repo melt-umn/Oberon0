@@ -116,7 +116,7 @@ cl::CaseLabel ::= l::Expr u::Expr
 {
   cl.pp = pp:ppConcat([l.pp, pp:text(".."), u.pp]);
   
-  cl.caseTranslation = and(gte(cl.caseExpr, l, location=l.location), lte(cl.caseExpr, u, location=u.location), location=cl.location);
+  cl.caseTranslation = Oberon0_Expr { $Expr{cl.caseExpr} >= $Expr{l} & $Expr{cl.caseExpr} <= $Expr{u} };
 
   --T2-start
   cl.errors := l.errors ++ u.errors;

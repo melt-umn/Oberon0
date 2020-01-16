@@ -43,29 +43,18 @@ s::Stmt ::= id::Name lower::Expr upper::Expr step::Expr body::Stmt
   --T2-end
 
   -- Choose the comparison operator based on whether we're increasing or decreasing
-  local comparison :: Expr=
-    if step.evalConstInt.isJust && step.evalConstInt.fromJust < 0 then 
-      gte(lExpr(idAccess(id, location=id.location), location=id.location), upper, location=upper.location)
-    else
-      lte(lExpr(idAccess(id, location=id.location), location=id.location), upper, location=upper.location);
+  local comparison :: Expr =
+    if step.evalConstInt.isJust && step.evalConstInt.fromJust < 0
+    then Oberon0_Expr { $Name{id} >= $Expr{upper} }
+    else Oberon0_Expr { $Name{id} <= $Expr{upper} };
 
-  {- id := lower;
-     WHILE id <= upper DO
-       body 
-       id = id + step;
-     END -}
   forwards to
-    seqStmt( 
-      assign(idAccess(id, location=id.location), lower, location=id.location),
-      while(comparison,
-        seqStmt(
-          body,
-          assign(idAccess(id, location=id.location), add(lExpr(idAccess(id, location=id.location), location=id.location), step, location=id.location), location=id.location),
-          location=body.location
-        ),
-        location=s.location
-      ),
-      location=s.location
-    );
+    Oberon0_Stmt {
+      $Name{id} := $Expr{lower};
+      WHILE $Expr{comparison} DO
+        $Stmt{body};
+        $Name{id} := $Name{id} + $Expr{step};
+      END
+    };
 }
 
