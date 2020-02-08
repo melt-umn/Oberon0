@@ -14,20 +14,3 @@ terminal EscapeName_t '$Name'  lexer classes {KEYWORD};
 
 terminal LBracket_t '{';
 terminal RBracket_t '}';
-
--- Workarounds for weirdness with ignore terminals
-parser attribute inOberon0::Boolean action { inOberon0 = false; };
-terminal InOberon0 '' action { inOberon0 = true; };
-terminal NotInOberon0 '' action { inOberon0 = false; };
-
-terminal Wild_t '_';
-
-disambiguate silver:WhiteSpace, edu:umn:cs:melt:Oberon0:core:concreteSyntax:WhiteSpace, silver:reflect:concretesyntax:WhiteSpace
-{
-  pluck if inOberon0 then WhiteSpace else silver:WhiteSpace;
-}
-
-disambiguate silver:WhiteSpace, edu:umn:cs:melt:Oberon0:core:concreteSyntax:WhiteSpace, silver:reflect:concretesyntax:WhiteSpace, silver:RegexChar_t
-{
-  pluck if inOberon0 then WhiteSpace else silver:WhiteSpace;
-}
