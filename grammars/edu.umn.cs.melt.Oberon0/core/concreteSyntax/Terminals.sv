@@ -3,11 +3,15 @@ grammar edu:umn:cs:melt:Oberon0:core:concreteSyntax;
 lexer class IDENTIFIER;
 lexer class KEYWORD dominates IDENTIFIER;
 
-ignore terminal WhiteSpace /[\r\n\t\ ]+/;
-ignore terminal Comment /\(\*             -- Opening lparen-star
-                          ([^\*]+|        -- Anything not including a star
-                           (\*+[^\*\)]))* -- stars, followed by non-rparen
-                         \*+\)/;          -- Closing stars-rparen
+ignore terminal WhiteSpace /[\r\n\t ]+/;
+
+{-
+  /\(\*              -- Opening lparen-star
+     ([^\*]+|        -- Anything not including a star
+      (\*+[^\*\)]))* -- stars, followed by non-rparen
+     \*+\)/          -- Closing stars-rparen
+-}
+ignore terminal Comment /\(\*([^*]+|(\*+[^*)]))*\*+\)/;
 
 terminal Id_t           /[A-Za-z][A-Za-z0-9]*/  lexer classes {IDENTIFIER};
 terminal Num_t          /[0-9]+/;
