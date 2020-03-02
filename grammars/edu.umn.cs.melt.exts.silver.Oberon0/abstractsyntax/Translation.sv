@@ -15,12 +15,4 @@ top::AST ::= prodName::String children::ASTs annotations::NamedASTs
     ["edu:umn:cs:melt:exts:silver:Oberon0:abstractsyntax:antiquoteStmt",
      "edu:umn:cs:melt:exts:silver:Oberon0:abstractsyntax:antiquoteExpr",
      "edu:umn:cs:melt:exts:silver:Oberon0:abstractsyntax:antiquoteName"];
-  varPatternProductions <-
-    ["edu:umn:cs:melt:exts:silver:ableC:abstractsyntax:varStmt",
-     "edu:umn:cs:melt:exts:silver:ableC:abstractsyntax:varExpr",
-     "edu:umn:cs:melt:exts:silver:ableC:abstractsyntax:varName"];
-  wildPatternProductions <-
-    ["edu:umn:cs:melt:exts:silver:ableC:abstractsyntax:wildStmt",
-     "edu:umn:cs:melt:exts:silver:ableC:abstractsyntax:wildExpr",
-     "edu:umn:cs:melt:exts:silver:ableC:abstractsyntax:wildName"];
 }
