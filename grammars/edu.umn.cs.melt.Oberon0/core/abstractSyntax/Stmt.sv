@@ -3,12 +3,12 @@ grammar edu:umn:cs:melt:Oberon0:core:abstractSyntax;
 nonterminal Stmt with location, pp,
   env, errors;  --T2
 
+propagate errors on Stmt;  --T2
+
 abstract production seqStmt
 s::Stmt ::= s1::Stmt s2::Stmt
 {
   s.pp = pp:ppConcat([s1.pp, pp:semi(), pp:line(), s2.pp]);
-  
-  s.errors := s1.errors ++ s2.errors;  --T2
 }
 
 
@@ -16,16 +16,13 @@ abstract production skip
 s::Stmt ::=
 {
   s.pp = pp:notext();
-  
-  s.errors := [];  --T2
 }
 
 abstract production assign
 s::Stmt ::= l::LExpr e::Expr
 {
   s.pp = pp:ppConcat([l.pp, pp:text(" := "), e.pp]);
-  --T2-start  
-  s.errors := l.errors ++ e.errors;
+  --T2-start
   s.errors <- if !l.evalConstInt.isJust then []
               else [err(l.location, "Cannot assign to the constant " ++ pp:show(100, l.pp))];
   --T2-end
@@ -41,8 +38,6 @@ s::Stmt ::= c::Expr t::Stmt e::Stmt
     | cond(_,_,_) -> pp:cat(pp:text("ELS"), e.pp)
     | _ -> pp:ppConcat([pp:text("ELSE"), pp:nestlines(2, e.pp), pp:text("END")])
     end]);
-  
-  s.errors := c.errors ++ t.errors ++ e.errors;  --T2
 }
 
 abstract production while
@@ -51,6 +46,4 @@ s::Stmt ::= con::Expr body::Stmt
   s.pp = pp:ppConcat([pp:text("WHILE "), con.pp, pp:text(" DO"),
            pp:nestlines(2, body.pp),
          pp:text("END")]);
-  
-  s.errors := con.errors ++ body.errors;  --T2
 }

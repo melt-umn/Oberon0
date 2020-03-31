@@ -8,7 +8,7 @@ s::Stmt ::= e::Expr cs::Cases
     cs.pp, pp:line(),
     pp:text("END")]);
 
-  s.errors := e.errors ++ cs.errors;  --T2
+  propagate errors;  --T2
 
   cs.caseExpr = e;
   cs.caseNext = skip(location=cs.location);
@@ -34,13 +34,14 @@ autocopy attribute caseNext :: Stmt;
 
 nonterminal Cases with location, env, errors, pp, caseTranslation<Stmt>, caseExpr, caseNext;
 
+propagate errors on Cases;  --T2
+
 abstract production caseOne
 cs::Cases ::= c::Case
 {
   cs.pp = c.pp;
   
   cs.caseTranslation = c.caseTranslation;
-  cs.errors := c.errors;  --T2
 }
 abstract production caseCons
 cs::Cases ::= c::Case rest::Cases
@@ -54,11 +55,12 @@ cs::Cases ::= c::Case rest::Cases
   --T2-start  
   cs.caseTranslation = c.caseTranslation;
   c.caseNext = rest.caseTranslation;
-  cs.errors := c.errors ++ rest.errors;
   --T2-end
 }
 
 nonterminal Case with location, env, errors, pp, caseTranslation<Stmt>, caseExpr, caseNext;
+
+propagate errors on Case;  --T2
 
 abstract production caseClause
 c::Case ::= cls::CaseLabels s::Stmt
@@ -66,7 +68,6 @@ c::Case ::= cls::CaseLabels s::Stmt
   c.pp = pp:ppConcat([cls.pp, pp:text(" : "), s.pp]);
   
   c.caseTranslation = cond(cls.caseTranslation, s, c.caseNext, location=c.location);
-  c.errors := cls.errors ++ s.errors;  --T2
 }
 abstract production caseElse
 c::Case ::= s::Stmt
@@ -74,10 +75,11 @@ c::Case ::= s::Stmt
   c.pp = pp:cat(pp:text("ELSE "), s.pp);
   
   c.caseTranslation = s;
-  c.errors := s.errors;  --T2
 }
 
 nonterminal CaseLabels with location, env, errors, pp, caseTranslation<Expr>, caseExpr;
+
+propagate errors on CaseLabels;  --T2
 
 abstract production oneCaseLabel
 cls::CaseLabels ::= cl::CaseLabel
@@ -85,7 +87,6 @@ cls::CaseLabels ::= cl::CaseLabel
   cls.pp = cl.pp;
   
   cls.caseTranslation = cl.caseTranslation;
-  cls.errors := cl.errors;  --T2
 }
 abstract production consCaseLabel
 cls::CaseLabels ::= cl::CaseLabel rest::CaseLabels
@@ -93,10 +94,11 @@ cls::CaseLabels ::= cl::CaseLabel rest::CaseLabels
   cls.pp = pp:ppConcat([cl.pp, pp:text(", "), rest.pp]);
   
   cls.caseTranslation = or(cl.caseTranslation, rest.caseTranslation, location=cls.location);
-  cls.errors := cl.errors ++ rest.errors;  --T2
 }
 
 nonterminal CaseLabel with location, env, errors, pp, caseTranslation<Expr>, caseExpr;
+
+propagate errors on CaseLabel;  --T2
 
 abstract production caseLabel
 cl::CaseLabel ::= e::Expr
@@ -105,8 +107,6 @@ cl::CaseLabel ::= e::Expr
   
   cl.caseTranslation = eq(cl.caseExpr, e, location=cl.location);
   --T2-start
-  cl.errors := e.errors;
-
   cl.errors <- if e.evalConstInt.isJust then []
                else [err(e.location, "CASE label " ++ pp:show(100, e.pp) ++ " is not a constant")];
   --T2-end
@@ -119,8 +119,6 @@ cl::CaseLabel ::= l::Expr u::Expr
   cl.caseTranslation = Oberon0_Expr { $Expr{cl.caseExpr} >= $Expr{l} & $Expr{cl.caseExpr} <= $Expr{u} };
 
   --T2-start
-  cl.errors := l.errors ++ u.errors;
-
   cl.errors <- if l.evalConstInt.isJust then []
                else [err(l.location, "CASE label lower bound " ++ pp:show(100, l.pp) ++ " is not a constant")];
   cl.errors <- if u.evalConstInt.isJust then []

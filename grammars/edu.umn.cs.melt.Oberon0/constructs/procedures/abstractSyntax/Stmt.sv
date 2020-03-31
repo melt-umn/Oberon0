@@ -2,6 +2,8 @@ grammar edu:umn:cs:melt:Oberon0:constructs:procedures:abstractSyntax;
 
 nonterminal Exprs with location, pp, env, errors;
 
+propagate errors on Exprs;  --T2
+
 abstract production callDispatch
 s::Stmt ::= f::Name a::Exprs
 {
@@ -20,7 +22,7 @@ s::Stmt ::= f::Name a::Exprs
 {
   s.pp = pp:ppConcat([f.pp, pp:parens(a.pp)]);
   
-  s.errors := f.errors ++ a.errors;  --T2
+  propagate errors;  --T2
 }
 
 
@@ -28,8 +30,6 @@ abstract production nilExprs
 e::Exprs ::=
 {
   e.pp = pp:notext();
-  
- e.errors := [];  --T2
 }
 
 abstract production consExprs
@@ -40,9 +40,7 @@ es::Exprs ::= e::Expr rest::Exprs
     | nilExprs() -> pp:notext()
     | _ -> pp:cat(pp:text(", "), rest.pp)
     end ]);
-  -- Same thing happens in pretty printing ELSIFs.
-
- es.errors := e.errors ++ rest.errors;  --T2
+  -- Same thing happens in pretty printing ELSIFs.              
 }
 
 abstract production readCall
