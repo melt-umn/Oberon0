@@ -16,6 +16,10 @@ Our paper is freely [available here](http://www-users.cs.umn.edu/~evw/pubs/kamin
 - Release 0.1.0: made in April, 2020
 - Release 0.1.1: made in April, 2020
 
+## License
+This software is distributed under the GNU Lesser General Public License. See the file LICENSE for details.  
+More information can be found at http://www.gnu.org/licenses/.
+
 ## Related publications
 
 Release 0.1.0 is the version discussed in the paper
