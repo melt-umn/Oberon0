@@ -6,7 +6,7 @@ nonterminal Decl with location, pp,
 {--
  - Used to get at each Decl individually for pretty printing.
  -}
-synthesized attribute individualDcls :: [Decorated Decl];  --T2
+monoid attribute individualDcls :: [Decorated Decl] with [], ++;  --T2
 {--
  - The brand new, resulting environment, modified from env.
  -}
@@ -14,7 +14,9 @@ synthesized attribute newEnv :: Decorated Env;  --T2
 {--
  - Information about the variable bindings of a declaration
  -}
-synthesized attribute vars :: [Pair<String Decorated Decl>];  --T2
+monoid attribute vars :: [Pair<String Decorated Decl>] with [], ++;  --T2
+
+propagate vars on Decl;
 
 {--
  - Lines up all decls by their left edge.
@@ -38,8 +40,7 @@ d::Decl ::= d1::Decl d2::Decl
            ++ (if !null(types) then [ppDecls("TYPE ", types)] else [])
            ++ (if !null(vars) then [ppDecls("VAR ", vars)] else []);
   --T2-start
-  d.individualDcls = d1.individualDcls ++ d2.individualDcls;
-  d.vars = d1.vars ++ d2.vars;
+  propagate individualDcls;
   
   -- Use the attributes 'env' and 'newEnv' to thread changes to the environment
   -- through the Decl block.
@@ -47,7 +48,7 @@ d::Decl ::= d1::Decl d2::Decl
   d2.env = d1.newEnv;
   d.newEnv = d2.newEnv;
   
-  d.errors := d1.errors ++ d2.errors;
+  propagate errors;
   --T2-end
 }
 
@@ -55,12 +56,11 @@ abstract production noDecl
 d::Decl ::=
 {
   d.pp = pp:notext();
-  --T2-start  
-  d.individualDcls = [];
-  d.vars = [];
+  --T2-start
+  propagate individualDcls;
   d.newEnv = d.env;
   
-  d.errors := [];
+  propagate errors;
   --T2-end
 }
 
@@ -70,8 +70,7 @@ d::Decl ::= id::Name e::Expr
   d.pp = pp:ppConcat([id.pp, pp:text(" = "), e.pp]);
 
   --T2-start  
-  d.individualDcls = [d];
-  d.vars = [];
+  d.individualDcls := [d];
   
   d.newEnv = addDefs(valueDef(id.name, d), d.env);
   
@@ -97,8 +96,7 @@ d::Decl ::= id::TypeName t::TypeExpr
 {
   d.pp = pp:ppConcat([id.pp, pp:text(" = "), t.pp]);
   --T2-start
-  d.individualDcls = [d];
-  d.vars = [];
+  d.individualDcls := [d];
   
   d.newEnv = addDefs(typeDef(id.name, d), d.env);
 
@@ -121,8 +119,8 @@ d::Decl ::= id::Name t::TypeExpr
   d.pp = pp:ppConcat([id.pp, pp:text(" : "), t.pp]);
 
   --T2-start
-  d.individualDcls = [d];
-  d.vars = [pair(id.name, d)];
+  d.individualDcls := [d];
+  d.vars <- [pair(id.name, d)];
   
   d.newEnv = addDefs(valueDef(id.name, d), d.env);
 
@@ -151,7 +149,7 @@ d::Decl ::= ids::IdList t::TypeExpr
   d.pp = pp:ppConcat([ids.pp, pp:text(" : "), t.pp]);
 
   --T2-start
-  d.individualDcls = [d];
+  d.individualDcls := [d];
 
   -- OMIT repeating the error over and over, if the type is malformed.
   d.errors := if null(t.errors)

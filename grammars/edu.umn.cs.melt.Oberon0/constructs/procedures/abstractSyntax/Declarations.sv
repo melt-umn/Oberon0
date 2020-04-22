@@ -12,8 +12,9 @@ synthesized attribute passedByValue :: Boolean occurs on Decl;  --T2
  -
  - @see vars
  -}
-synthesized attribute funs :: [Pair<String Decorated Decl>] occurs on Decl;  --T2
+monoid attribute funs :: [Pair<String Decorated Decl>] with [], ++ occurs on Decl;  --T2
 
+propagate funs on Decl;
 
 abstract production paramDeclValue
 d::Decl ::= id::Name t::TypeExpr
@@ -21,8 +22,8 @@ d::Decl ::= id::Name t::TypeExpr
   d.pp = pp:ppConcat([id.pp, pp:text(" : "), t.pp]);
   --T2-start
    d.passedByValue = true;
-   d.individualDcls = [d];
-   d.vars = [pair(id.name, d)];
+   d.individualDcls := [d];
+   d.vars := [pair(id.name, d)];
    d.newEnv = addDefs(valueDef(id.name, d), d.env);
   --T2-end
   
@@ -35,8 +36,8 @@ d::Decl ::= id::Name t::TypeExpr
   d.pp = pp:ppConcat([pp:text("VAR "), id.pp, pp:text(" : "), t.pp]);
   --T2-start
    d.passedByValue = false;
-   d.individualDcls = [d];
-   d.vars = [pair(id.name, d)];
+   d.individualDcls := [d];
+   d.vars := [pair(id.name, d)];
    d.newEnv = addDefs(valueDef(id.name, d), d.env);
   --T2-end
 
@@ -47,35 +48,30 @@ d::Decl ::= id::Name t::TypeExpr
 aspect production seqDecl
 d::Decl ::= d1::Decl d2::Decl
 {
-  d.funs = d1.funs ++ d2.funs;
   d.passedByValue = false;
 }
 
 aspect production noDecl
 d::Decl ::=
 {
-  d.funs = [];
   d.passedByValue = false;
 }
 
 aspect production constDecl
 d::Decl ::= id::Name e::Expr
 {
-  d.funs = [];
   d.passedByValue = false;
 }
 
 aspect production typeDecl
 d::Decl ::= id::TypeName t::TypeExpr
 {
-  d.funs = [];
   d.passedByValue = false;
 }
 
 aspect production varDecl
 d::Decl ::= id::Name t::TypeExpr
 {
-  d.funs = [];
   d.passedByValue = false;
 }
   --T2-end
