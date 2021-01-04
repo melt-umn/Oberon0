@@ -4,7 +4,7 @@ grammar edu:umn:cs:melt:exts:silver:Oberon0:abstractsyntax;
 imports silver:reflect;
 
 -- Library implementing object-language to meta-langauge translation
-imports silver:metatranslation;
+imports silver:compiler:metatranslation;
 
 aspect production nonterminalAST
 top::AST ::= prodName::String children::ASTs annotations::NamedASTs

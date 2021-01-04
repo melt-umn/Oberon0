@@ -2,8 +2,8 @@ grammar edu:umn:cs:melt:exts:silver:Oberon0:abstractsyntax;
 
 imports silver:langutil:pp;
 
-imports silver:definition:core;
-imports silver:extension:patternmatching;
+imports silver:compiler:definition:core;
+imports silver:compiler:extension:patternmatching;
 
 imports edu:umn:cs:melt:Oberon0:core:abstractSyntax as Oberon0;
 

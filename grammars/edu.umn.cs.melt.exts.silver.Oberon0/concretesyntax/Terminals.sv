@@ -1,6 +1,6 @@
 grammar edu:umn:cs:melt:exts:silver:Oberon0:concretesyntax;
 
-imports silver:definition:regex as silver;
+imports silver:compiler:definition:regex as silver;
 imports silver:reflect:concretesyntax;
 
 -- Terminal definitions for quote productions

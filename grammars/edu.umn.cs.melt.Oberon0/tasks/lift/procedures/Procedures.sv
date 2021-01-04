@@ -1,6 +1,6 @@
 grammar edu:umn:cs:melt:Oberon0:tasks:lift:procedures;
 
-import silver:util:treemap;
+import silver:util:treemap as tm;
 
 {--
  - The lambda-lifting solution set for a procedure.
@@ -98,9 +98,9 @@ function getProcDecls
 }
 
 function get_bindings
-[Pair<a b>] ::= sm::TreeMap<a b>
+[Pair<a b>] ::= sm::tm:Map<a b>
 {
-  return treeDeconvert(sm);
+  return tm:toList(sm);
 }
 
 function isVarDecl

@@ -1,9 +1,9 @@
 grammar edu:umn:cs:melt:exts:silver:Oberon0:composed:with_Oberon0;
 
-import silver:host;
+import silver:compiler:host;
 
 parser svParse::Root {
-  silver:host;
+  silver:compiler:host;
   
   edu:umn:cs:melt:exts:silver:Oberon0;
 }

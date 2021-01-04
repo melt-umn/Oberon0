@@ -3,13 +3,13 @@ grammar edu:umn:cs:melt:Oberon0:core:abstractSyntax;
 {-
  - import a red-black tree data structure.
  -}
-import silver:util:treemap;
+import silver:util:treemap as tm;
 
 {-
  - This file is a demonstration of complex extensible environments in Silver.
  - For Oberon0, it is overcomplicated, and this entire file could be
  - erased, and the 'env' attribute simply changed to be a
- - TreeMap<String  (Decorated Decl)> directly.
+ - Map<String  (Decorated Decl)> directly.
  - 
  - However, this file is a good demonstration of how to set up an environment
  - that can scale up to just about any language.
@@ -35,8 +35,8 @@ import silver:util:treemap;
  -}
 nonterminal Env with types, values;
 
-inherited attribute types :: [ TreeMap<String Decorated Decl> ];
-inherited attribute values :: [ TreeMap<String Decorated Decl> ];
+inherited attribute types :: [ tm:Map<String Decorated Decl> ];
+inherited attribute values :: [ tm:Map<String Decorated Decl> ];
 
 {--
  - A dumb container for the unrestricted set of inherited attributes that
@@ -58,8 +58,8 @@ Decorated Env ::=
   -- using 'aspect function'.
   production attribute e::Env;
   e = envRecord();
-  e.types = [treeNew(compareString)];
-  e.values = [treeNew(compareString)];
+  e.types = [tm:empty(compareString)];
+  e.values = [tm:empty(compareString)];
   return e;
 }
 
@@ -71,8 +71,8 @@ Decorated Env ::= e1::Decorated Env
 {
   production attribute e::Env;
   e = envRecord();
-  e.types = [treeNew(compareString)] ++ e1.types;
-  e.values = [treeNew(compareString)] ++ e1.values;
+  e.types = [tm:empty(compareString)] ++ e1.types;
+  e.values = [tm:empty(compareString)] ++ e1.values;
   return e;
 }
 
@@ -85,8 +85,8 @@ Decorated Env ::= d::Defs  e1::Decorated Env
 {
   production attribute e::Env;
   e = envRecord();
-  e.types = treeConvert(d.typeDefs,head(e1.types)) :: tail(e1.types);
-  e.values = treeConvert(d.valueDefs,head(e1.values)) :: tail(e1.values);
+  e.types = tm:add(d.typeDefs,head(e1.types)) :: tail(e1.types);
+  e.values = tm:add(d.valueDefs,head(e1.values)) :: tail(e1.values);
   return e;
 }
 
@@ -188,9 +188,9 @@ Maybe<a> ::= l::[a]
  - actually do the lookup as far as gets demanded in the scope list.
  -}
 function lookupInScopes
-[Maybe<a>] ::= s::String ss::[TreeMap<String a>]
+[Maybe<a>] ::= s::String ss::[tm:Map<String a>]
 {
-  return map(adapt, map(treeLookup(s,_), ss));
+  return map(adapt, map(tm:lookup(s,_), ss));
 }
 
 {--
