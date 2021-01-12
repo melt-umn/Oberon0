@@ -134,7 +134,7 @@ e::Expr ::= e1::Expr e2::Expr
   e.errors <- checkErrors(e2.type, integerType(), "Second operand to >", e2.location);
 }
 
-aspect production ltOpe
+aspect production lteOp
 e::Expr ::= e1::Expr e2::Expr
 {
   e.type = booleanType();
@@ -143,7 +143,7 @@ e::Expr ::= e1::Expr e2::Expr
   e.errors <- checkErrors(e2.type, integerType(), "Second operand to <=", e2.location);
 }
 
-aspect production gtOpe
+aspect production gteOp
 e::Expr ::= e1::Expr e2::Expr
 {
   e.type = booleanType();

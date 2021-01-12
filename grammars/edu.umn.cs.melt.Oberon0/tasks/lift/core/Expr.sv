@@ -113,14 +113,14 @@ e::Expr ::= l::Expr r::Expr
   e.lifted = gtOp(l.lifted, r.lifted, location=e.location);
 }
 
-aspect production ltOpe
+aspect production lteOp
 e::Expr ::= l::Expr r::Expr
 {
   e.freevars = l.freevars ++ r.freevars;
   e.lifted = lteOp(l.lifted, r.lifted, location=e.location);
 }
 
-aspect production gtOpe
+aspect production gteOp
 e::Expr ::= l::Expr r::Expr
 {
   e.freevars = l.freevars ++ r.freevars;

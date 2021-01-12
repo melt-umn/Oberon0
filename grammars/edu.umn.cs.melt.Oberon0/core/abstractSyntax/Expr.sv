@@ -177,7 +177,7 @@ e::Expr ::= e1::Expr e2::Expr
   e.evalConstInt = nothing();  --T2
 }
 
-abstract production ltOpe
+abstract production lteOp
 e::Expr ::= e1::Expr e2::Expr
 {
   e.pp = pp:parens(pp:ppConcat([e1.pp, pp:text(" <= "), e2.pp]));
@@ -185,7 +185,7 @@ e::Expr ::= e1::Expr e2::Expr
   e.evalConstInt = nothing(); --T2
 }
 
-abstract production gtOpe
+abstract production gteOp
 e::Expr ::= e1::Expr e2::Expr
 {
   e.pp = pp:parens(pp:ppConcat([e1.pp, pp:text(" >= "), e2.pp]));

@@ -92,13 +92,13 @@ e::Expr ::= l::Expr r::Expr
   e.cTrans = "(" ++ l.cTrans ++ " > " ++ r.cTrans ++ ")";
 }
 
-aspect production ltOpe
+aspect production lteOp
 e::Expr ::= l::Expr r::Expr
 {
   e.cTrans = "(" ++ l.cTrans ++ " <= " ++ r.cTrans ++ ")";
 }
 
-aspect production gtOpe
+aspect production gteOp
 e::Expr ::= l::Expr r::Expr
 {
   e.cTrans = "(" ++ l.cTrans ++ " >= " ++ r.cTrans ++ ")";
