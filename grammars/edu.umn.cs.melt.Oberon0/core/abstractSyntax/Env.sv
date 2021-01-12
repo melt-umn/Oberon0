@@ -58,8 +58,8 @@ Decorated Env ::=
   -- using 'aspect function'.
   production attribute e::Env;
   e = envRecord();
-  e.types = [tm:empty(compareString)];
-  e.values = [tm:empty(compareString)];
+  e.types = [tm:empty()];
+  e.values = [tm:empty()];
   return e;
 }
 
@@ -71,8 +71,8 @@ Decorated Env ::= e1::Decorated Env
 {
   production attribute e::Env;
   e = envRecord();
-  e.types = [tm:empty(compareString)] ++ e1.types;
-  e.values = [tm:empty(compareString)] ++ e1.values;
+  e.types = [tm:empty()] ++ e1.types;
+  e.values = [tm:empty()] ++ e1.values;
   return e;
 }
 
