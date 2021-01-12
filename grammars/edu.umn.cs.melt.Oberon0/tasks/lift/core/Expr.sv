@@ -85,45 +85,45 @@ e::Expr ::= l::Expr r::Expr
   e.lifted = or(l.lifted, r.lifted, location=e.location);
 }
 
-aspect production eq
+aspect production eqOp
 e::Expr ::= l::Expr r::Expr
 {
   e.freevars = l.freevars ++ r.freevars;
-  e.lifted = eq(l.lifted, r.lifted, location=e.location);
+  e.lifted = eqOp(l.lifted, r.lifted, location=e.location);
 }
 
-aspect production neq
+aspect production neqOp
 e::Expr ::= l::Expr r::Expr
 {
   e.freevars = l.freevars ++ r.freevars;
-  e.lifted = neq(l.lifted, r.lifted, location=e.location);
+  e.lifted = neqOp(l.lifted, r.lifted, location=e.location);
 }
 
-aspect production lt
+aspect production ltOp
 e::Expr ::= l::Expr r::Expr
 {
   e.freevars = l.freevars ++ r.freevars;
-  e.lifted = lt(l.lifted, r.lifted, location=e.location);
+  e.lifted = ltOp(l.lifted, r.lifted, location=e.location);
 }
 
-aspect production gt
+aspect production gtOp
 e::Expr ::= l::Expr r::Expr
 {
   e.freevars = l.freevars ++ r.freevars;
-  e.lifted = gt(l.lifted, r.lifted, location=e.location);
+  e.lifted = gtOp(l.lifted, r.lifted, location=e.location);
 }
 
-aspect production lte
+aspect production ltOpe
 e::Expr ::= l::Expr r::Expr
 {
   e.freevars = l.freevars ++ r.freevars;
-  e.lifted = lte(l.lifted, r.lifted, location=e.location);
+  e.lifted = lteOp(l.lifted, r.lifted, location=e.location);
 }
 
-aspect production gte
+aspect production gtOpe
 e::Expr ::= l::Expr r::Expr
 {
   e.freevars = l.freevars ++ r.freevars;
-  e.lifted = gte(l.lifted, r.lifted, location=e.location);
+  e.lifted = gteOp(l.lifted, r.lifted, location=e.location);
 }
 

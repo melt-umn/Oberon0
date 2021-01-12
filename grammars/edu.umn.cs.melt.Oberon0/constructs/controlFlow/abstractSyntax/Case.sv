@@ -105,7 +105,7 @@ cl::CaseLabel ::= e::Expr
 {
   cl.pp = e.pp;
   
-  cl.caseTranslation = eq(cl.caseExpr, e, location=cl.location);
+  cl.caseTranslation = eqOp(cl.caseExpr, e, location=cl.location);
   --T2-start
   cl.errors <- if e.evalConstInt.isJust then []
                else [err(e.location, "CASE label " ++ pp:show(100, e.pp) ++ " is not a constant")];

@@ -68,37 +68,37 @@ e::Expr ::= l::Expr r::Expr
   e.cTrans = "(" ++ l.cTrans ++ " || " ++ r.cTrans ++ ")";
 }
 
-aspect production eq
+aspect production eqOp
 e::Expr ::= l::Expr r::Expr
 {
   e.cTrans = "(" ++ l.cTrans ++ " == " ++ r.cTrans ++ ")";
 }
 
-aspect production neq
+aspect production neqOp
 e::Expr ::= l::Expr r::Expr
 {
   e.cTrans = "(" ++ l.cTrans ++ " != " ++ r.cTrans ++ ")";
 }
 
-aspect production lt
+aspect production ltOp
 e::Expr ::= l::Expr r::Expr
 {
   e.cTrans = "(" ++ l.cTrans ++ " < " ++ r.cTrans ++ ")";
 }
 
-aspect production gt
+aspect production gtOp
 e::Expr ::= l::Expr r::Expr
 {
   e.cTrans = "(" ++ l.cTrans ++ " > " ++ r.cTrans ++ ")";
 }
 
-aspect production lte
+aspect production ltOpe
 e::Expr ::= l::Expr r::Expr
 {
   e.cTrans = "(" ++ l.cTrans ++ " <= " ++ r.cTrans ++ ")";
 }
 
-aspect production gte
+aspect production gtOpe
 e::Expr ::= l::Expr r::Expr
 {
   e.cTrans = "(" ++ l.cTrans ++ " >= " ++ r.cTrans ++ ")";

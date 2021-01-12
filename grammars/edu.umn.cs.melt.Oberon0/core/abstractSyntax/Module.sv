@@ -27,8 +27,8 @@ m::Module ::= id::Name ds::Decl ss::Stmt endid::Name
   initialGlobalScope = newScope(addDefs(foldr(appendDefs, noDefs(), [
      aprioriTypeDecl("BOOLEAN", booleanTypeExpr(location=aprioriLoc)),
      aprioriTypeDecl("INTEGER", integerTypeExpr(location=aprioriLoc)),
-     aprioriConstDecl("TRUE", eq(error("not needed"), error("not needed"), location=aprioriLoc)),
-     aprioriConstDecl("FALSE", eq(error("not needed"), error("not needed"), location=aprioriLoc))]),
+     aprioriConstDecl("TRUE", eqOp(error("not needed"), error("not needed"), location=aprioriLoc)),
+     aprioriConstDecl("FALSE", eqOp(error("not needed"), error("not needed"), location=aprioriLoc))]),
     emptyEnv()));
  --T2-end
 }

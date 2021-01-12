@@ -94,7 +94,7 @@ e::Expr ::= e1::Expr e2::Expr
   e.errors <- checkErrors(e2.type, booleanType(), "Second operand to OR", e2.location);
 }
 
-aspect production eq
+aspect production eqOp
 e::Expr ::= e1::Expr e2::Expr
 {
   e.type = booleanType();
@@ -105,7 +105,7 @@ e::Expr ::= e1::Expr e2::Expr
               else [err(e.location, "Operand to equality must be INTEGER, instead it is " ++ pp:show(100, e2.type.pp))];
 }
 
-aspect production neq
+aspect production neqOp
 e::Expr ::= e1::Expr e2::Expr
 {
   e.type = booleanType();
@@ -116,7 +116,7 @@ e::Expr ::= e1::Expr e2::Expr
               else [err(e.location, "Operand to inequality must be INTEGER, instead it is " ++ pp:show(100, e2.type.pp))];
 }
 
-aspect production lt
+aspect production ltOp
 e::Expr ::= e1::Expr e2::Expr
 {
   e.type = booleanType();
@@ -125,7 +125,7 @@ e::Expr ::= e1::Expr e2::Expr
   e.errors <- checkErrors(e2.type, integerType(), "Second operand to <", e2.location);
 }
 
-aspect production gt
+aspect production gtOp
 e::Expr ::= e1::Expr e2::Expr
 {
   e.type = booleanType();
@@ -134,7 +134,7 @@ e::Expr ::= e1::Expr e2::Expr
   e.errors <- checkErrors(e2.type, integerType(), "Second operand to >", e2.location);
 }
 
-aspect production lte
+aspect production ltOpe
 e::Expr ::= e1::Expr e2::Expr
 {
   e.type = booleanType();
@@ -143,7 +143,7 @@ e::Expr ::= e1::Expr e2::Expr
   e.errors <- checkErrors(e2.type, integerType(), "Second operand to <=", e2.location);
 }
 
-aspect production gte
+aspect production gtOpe
 e::Expr ::= e1::Expr e2::Expr
 {
   e.type = booleanType();

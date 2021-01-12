@@ -145,7 +145,7 @@ e::Expr ::= e1::Expr e2::Expr
 
 -- Comparison
 
-abstract production eq
+abstract production eqOp
 e::Expr ::= e1::Expr e2::Expr
 {
   e.pp = pp:parens(pp:ppConcat([e1.pp, pp:text(" = "), e2.pp]));
@@ -153,7 +153,7 @@ e::Expr ::= e1::Expr e2::Expr
   e.evalConstInt = nothing();  --T2
 }
 
-abstract production neq
+abstract production neqOp
 e::Expr ::= e1::Expr e2::Expr
 {
   e.pp = pp:parens(pp:ppConcat([e1.pp, pp:text(" # "), e2.pp]));
@@ -161,7 +161,7 @@ e::Expr ::= e1::Expr e2::Expr
   e.evalConstInt = nothing();  --T2
 }
 
-abstract production lt
+abstract production ltOp
 e::Expr ::= e1::Expr e2::Expr
 {
   e.pp = pp:parens(pp:ppConcat([e1.pp, pp:text(" < "), e2.pp]));
@@ -169,7 +169,7 @@ e::Expr ::= e1::Expr e2::Expr
   e.evalConstInt = nothing();  --T2
 }
 
-abstract production gt
+abstract production gtOp
 e::Expr ::= e1::Expr e2::Expr
 {
   e.pp = pp:parens(pp:ppConcat([e1.pp, pp:text(" > "), e2.pp]));
@@ -177,7 +177,7 @@ e::Expr ::= e1::Expr e2::Expr
   e.evalConstInt = nothing();  --T2
 }
 
-abstract production lte
+abstract production ltOpe
 e::Expr ::= e1::Expr e2::Expr
 {
   e.pp = pp:parens(pp:ppConcat([e1.pp, pp:text(" <= "), e2.pp]));
@@ -185,7 +185,7 @@ e::Expr ::= e1::Expr e2::Expr
   e.evalConstInt = nothing(); --T2
 }
 
-abstract production gte
+abstract production gtOpe
 e::Expr ::= e1::Expr e2::Expr
 {
   e.pp = pp:parens(pp:ppConcat([e1.pp, pp:text(" >= "), e2.pp]));
