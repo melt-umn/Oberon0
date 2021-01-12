@@ -126,7 +126,7 @@ Boolean ::= a::Decorated Decl  b::Decorated Decl
 function uniqueName
 String ::= start::String un::[String]
 {
-  return if containsBy(stringEq, start, un)
+  return if contains(start, un)
          then uniqueName(start ++ "ZZ" ++ toString(genInt()), un)
          else start;
 }

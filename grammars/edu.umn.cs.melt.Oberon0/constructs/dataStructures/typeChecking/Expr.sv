@@ -29,7 +29,7 @@ e::LExpr ::= rec::LExpr fld::Name
 {
   e.type =
     case rec.type of
-    | recordType(decls,_) -> case lookupBy(stringEq, fld.name, decls.vars) of
+    | recordType(decls,_) -> case lookup(fld.name, decls.vars) of
                              | just(ty1) -> ty1.type
                              | _ -> errorType()
                              end
@@ -39,7 +39,7 @@ e::LExpr ::= rec::LExpr fld::Name
   e.errors <- 
     case rec.type of
     | recordType(decls,_) ->
-        case lookupBy(stringEq, fld.name, decls.vars) of
+        case lookup(fld.name, decls.vars) of
         | just(ty1) -> []
         | _ -> [err(rec.location, pp:show(100, rec.pp) ++ " does not contain a field called " ++ fld.name)]
         end
