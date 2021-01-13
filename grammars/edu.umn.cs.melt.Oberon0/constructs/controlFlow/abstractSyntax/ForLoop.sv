@@ -17,7 +17,7 @@ s::Stmt ::= id::Name lower::Expr upper::Expr body::Stmt
       pp:nestlines(2, body.pp),
     pp:text("DONE")]);
 
-  forwards to forStmt(lower, upper, number("1", location=id.location), body, location=s.location);
+  forwards to forStmtBy(id, lower, upper, number("1", location=id.location), body, location=s.location);
 }
 
 abstract production forStmtBy

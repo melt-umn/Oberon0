@@ -77,7 +77,7 @@ t::Task ::= p_ast::Decorated Module
 {
   t.tioOut = if null(p_ast.errors)
              then t.tioIn
-             else print(toString(head(sort(p_ast.errors)).where.line) ++ "\n\n", t.tioIn);
+             else print(toString(head(sortBy(messageLte, p_ast.errors)).where.line) ++ "\n\n", t.tioIn);
 }
 
 {- Examples of other tasks -}

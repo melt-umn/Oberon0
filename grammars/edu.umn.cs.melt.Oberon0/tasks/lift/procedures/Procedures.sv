@@ -28,10 +28,12 @@ d::Decl ::= id::Name formals::Decl ld::Decl s::Stmt endid::Name
   -- the set of functions in the current scope, we already know which variables have
   -- to be abstracted out. (using s.env - self, because we should have solve children, 
   -- and we need to know the free variables of child functions)
-  local funs::[Decorated Decl] = remove(d, getProcDecls (s.env));
+  local funs::[Decorated Decl] = removeBy(eqDecls, d, getProcDecls (s.env));
 
   -- the solutions of the set equations.
-  d.sol = intersect(vars, unions(s.freevars :: map((.sol), intersect(funs, s.freevars))));
+  d.sol = 
+    intersectBy(eqDecls, vars, 
+      unionsBy(eqDecls, s.freevars :: map((.sol), intersectBy(eqDecls, funs, s.freevars))));
   -- read: Take all free variables mention in body, plus all free variables mentioned in
   -- called child procedure's sol sets, and add them.
 
