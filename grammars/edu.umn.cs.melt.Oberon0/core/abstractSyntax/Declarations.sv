@@ -6,7 +6,7 @@ nonterminal Decl with location, pp,
 {--
  - Used to get at each Decl individually for pretty printing.
  -}
-monoid attribute individualDcls :: [Decorated Decl] with [], ++;  --T2
+monoid attribute individualDcls :: [Decorated Decl];  --T2
 {--
  - The brand new, resulting environment, modified from env.
  -}
@@ -14,7 +14,7 @@ synthesized attribute newEnv :: Decorated Env;  --T2
 {--
  - Information about the variable bindings of a declaration
  -}
-monoid attribute vars :: [Pair<String Decorated Decl>] with [], ++;  --T2
+monoid attribute vars :: [Pair<String Decorated Decl>];  --T2
 
 propagate vars on Decl;
 

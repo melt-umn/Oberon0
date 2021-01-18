@@ -12,7 +12,7 @@ synthesized attribute passedByValue :: Boolean occurs on Decl;  --T2
  -
  - @see vars
  -}
-monoid attribute funs :: [Pair<String Decorated Decl>] with [], ++ occurs on Decl;  --T2
+monoid attribute funs :: [Pair<String Decorated Decl>] occurs on Decl;  --T2
 
 propagate funs on Decl;
 

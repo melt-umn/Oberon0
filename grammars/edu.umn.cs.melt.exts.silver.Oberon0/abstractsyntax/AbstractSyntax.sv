@@ -11,14 +11,14 @@ imports edu:umn:cs:melt:Oberon0:core:abstractSyntax as Oberon0;
 abstract production quoteStmt
 top::Expr ::= ast::Oberon0:Stmt
 {
-  top.unparse = s"Oberon0_Stmt {${sconcat(explode("\n", show(80, ast.pp)))}}";
+  top.unparse = s"Oberon0_Stmt {${concat(explode("\n", show(80, ast.pp)))}}";
   forwards to translate(top.location, reflect(new(ast)));
 }
 
 abstract production quoteExpr
 top::Expr ::= ast::Oberon0:Expr
 {
-  top.unparse = s"Oberon0_Expr {${sconcat(explode("\n", show(80, ast.pp)))}}";
+  top.unparse = s"Oberon0_Expr {${concat(explode("\n", show(80, ast.pp)))}}";
   forwards to translate(top.location, reflect(new(ast)));
 }
 
