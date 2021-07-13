@@ -1,0 +1,6 @@
+MODULE A1E1;
+  VAR x, y : INTEGER;
+  BEGIN
+    y := 1*2 + 4;
+    x := y * 7;
+END A1E1.

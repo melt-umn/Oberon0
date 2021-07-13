@@ -1,3 +1,5 @@
 *.jar
 build.xml
+*.ober_pp.ob
+*.ober.errors
 *~
