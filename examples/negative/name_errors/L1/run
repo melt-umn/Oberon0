@@ -1,0 +1,5 @@
+#!/bin/bash
+
+cp ../../../../oberon0_a5.jar .
+
+java -Xss4M -Xmx1800M -jar oberon0_a5.jar $1

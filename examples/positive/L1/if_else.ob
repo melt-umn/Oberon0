@@ -1,0 +1,16 @@
+MODULE IfElse;
+
+VAR b: BOOLEAN;
+    x: INTEGER;
+
+BEGIN
+  b := TRUE;
+  
+  IF b 
+  THEN
+    x := 4
+  ELSE
+    x := 42
+  END;
+  
+END IfElse.

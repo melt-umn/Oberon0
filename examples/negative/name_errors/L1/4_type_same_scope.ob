@@ -1,0 +1,8 @@
+MODULE TypeSameScope;
+
+TYPE STUFF = BOOLEAN;
+     STUFF = INTEGER;
+
+VAR b: STUFF;
+
+END TypeSameScope.

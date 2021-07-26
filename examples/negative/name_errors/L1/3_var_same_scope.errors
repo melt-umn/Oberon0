@@ -1,0 +1,2 @@
+3_var_same_scope.ob:3:7: error: VAR declaration x is already declared at 3_var_same_scope.ob:3
+

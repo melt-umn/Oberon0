@@ -1,0 +1,16 @@
+MODULE While;
+
+VAR i,x,y: INTEGER;
+
+BEGIN
+  x := 2;
+  y := 3;
+  i := 0;
+  WHILE i < 3
+  DO
+    x := x * y;
+    y := y * x;
+    i := i + 1
+  END;
+  
+END While.
