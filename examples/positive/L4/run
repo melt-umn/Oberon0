@@ -13,9 +13,28 @@ ObJar="oberon0_a5.jar"
 
 JAR=${PathToJar}${ObJar}
 
-# Build each file specified (if there is more than one)
-
-for file in "$@" 
-do
-  java -Xss4M -Xmx1800M -jar $JAR $file
-done
+if [ "$1" == "test" ];
+then
+  # Build all examples and test that a .c file is generated as expected
+  declare -a examples=("array_type" "array_var" "const_len_array" "record"
+                       "Sample" "typed_array_in_proc")
+  declare r=0
+   for file in ${examples[@]}
+    do
+      java -Xss4M -Xmx1800M -jar ${PathToJar}oberon0_a5.jar ${file}.ob
+      if [[ ! -f ${file}.c ]]
+        then
+          r=1
+      fi
+    done
+    if [ "$r" == 1 ] 
+      then
+        exit 1
+    fi
+else
+  # Build each file specified (if there is more than one)
+  for file in "$@" 
+  do
+    java -Xss4M -Xmx1800M -jar $JAR $file
+  done
+fi

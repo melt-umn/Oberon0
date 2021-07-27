@@ -13,9 +13,29 @@ ObJar="oberon0_a5.jar"
 
 JAR=${PathToJar}${ObJar}
 
-# Build each file specified (if there is more than one)
-
-for file in "$@" 
-do
-  java -Xss4M -Xmx1800M -jar $JAR $file
-done
+if [ "$1" == "test" ];
+then
+  # Build all examples and test that a .c file is generated as expected
+  declare -a examples=("const_diff_scope_2" "const_diff_scope" "gcd_recursive" 
+                       "global_var_proc" "GlobalProcs" "L1L2_write" "Lift1"
+                       "non_var_in_proc" "type_diff_scope" "type_diff_scope_2")
+  declare r=0
+  for file in ${examples[@]}
+    do
+      java -Xss4M -Xmx1800M -jar ${PathToJar}oberon0_a5.jar ${file}.ob
+      if [[ ! -f ${file}.c ]]
+        then
+          r=1
+      fi
+    done
+    if [ "$r" == 1 ]
+      then
+        exit 1
+    fi
+else
+  # Build each file specified (if there is more than one)
+  for file in "$@" 
+  do
+    java -Xss4M -Xmx1800M -jar $JAR $file
+  done
+fi
