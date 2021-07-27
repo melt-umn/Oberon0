@@ -1,5 +1,0 @@
-MODULE VarSameScope;
-  VAR x, x : INTEGER;
-BEGIN
-  
-END VarSameScope.
