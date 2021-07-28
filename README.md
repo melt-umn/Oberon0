@@ -47,7 +47,7 @@ This will compile the extended version of Silver needed to build Oberon0 and the
 
 Be sure that Silver version 0.4.2 is used since it contains the new term-rewriting features used here.
 
-_Note 7/26/2021: The test suite with example code provided by the LDTA 2011 Tool Challenge was hosted on google code and appears to have vanished. The test examples remain in the following repository: https://github.com/ericvanwyk/ldta-2011, and were also migrated into the `examples` folder here._
+_Note 7/27/2021: The test suite with example code provided by the LDTA 2011 Tool Challenge was hosted on google code and appears to have vanished. The test examples remain in the following repository: https://github.com/ericvanwyk/ldta-2011, and were also migrated into the `examples` directory here. These can be built using the `run` script contained within each subdirectory. This script takes a file name(s) of the example you would like to run, e.g. `./run 3_var_same_scope.ob`._
 
 ## Required Software
 - Silver version 0.4.2.  Availble at https://melt.cs.umn.edu/silver and archived at https://doi.org/10.13020/D6QX07.

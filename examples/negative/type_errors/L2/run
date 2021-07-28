@@ -16,8 +16,11 @@ JAR=${PathToJar}${ObJar}
 if [ "$1" == "test" ];
 then
   # Build all examples and test that a .c file is NOT generated, as expected
-  declare -a examples=("3_var_same_scope" "4_const_same_scope" 
-                       "4_type_same_scope" "5_const_var_same" "5_wrong_module")
+  declare -a examples=("7_bool_lower_limit_for" "7_bool_upper_limit_for"
+                       "8_bool_low_limit_case" "8_bool_upper_limit_case"
+                       "8_bool_var_case" "9_bool_var_for" 
+                       "9_var_bool_high_lim_for" "9_var_bool_low_lim_for"
+                       "10_var_bool_upper_lim_case" "11_var_bool_limit_case")
   declare r=0
    for file in ${examples[@]}
     do

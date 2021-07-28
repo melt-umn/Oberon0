@@ -21,6 +21,29 @@ try {
     }
   }
 
+  stage("Test") {
+    def examples=['examples/negative/name_errors/L1',
+                  'examples/negative/name_errors/L3',
+                  'examples/negative/name_errors/L4'
+                  'examples/negative/parse_errors/L1',
+                  'examples/negative/parse_errors/L2',
+                  'examples/negative/parse_errors/L3',
+                  'examples/negative/parse_errors/L4',
+                  'examples/negative/type_errors/L1',
+                  'examples/negative/type_errors/L2',
+                  'examples/negative/type_errors/L3',
+                  'examples/negative/type_errors/L4',
+                  'examples/positive/L1',
+                  'examples/positive/L2',
+                  'examples/positive/L3',
+                  'examples/positive/L4']
+
+    def tasks = [:]
+    tasks << examples.collectEntries { t -> [(t): task_example(t, newenv)] }
+    
+    parallel tasks
+  }
+
   /* If we've gotten all this way with a successful build, don't take up disk space */
   melt.clearGenerated()
 }
@@ -32,3 +55,26 @@ finally {
 }
 } // node
 
+// Build a specific example in the local workspace
+def task_example(String examplepath, newenv){
+  def exts_base = env.WORKSPACE
+  
+  return {
+    // Each parallel task executes in a seperate node
+    node {
+      melt.clearGenerated()
+
+      // Override the env to use the task node's workspace for generated
+      newenv << "SILVER_GEN=${env.WORKSPACE}/generated"
+      
+      withEnv(newenv) {
+        // Go back to our "parent" workspace, into the example
+        dir("${exts_base}/extensions/Oberon0/${examplepath}") {
+          sh "./run test"
+        }
+      }
+      // Blow away these generated files in our private workspace
+      deleteDir()
+    }
+  }
+}

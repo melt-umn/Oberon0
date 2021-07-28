@@ -5,7 +5,7 @@
 
 # Edit path to where Oberon0 jars are kept
 
-PathToJar="../../../../"
+PathToJar="../../../"
 
 # Specify which artifact jar you would like to use, e.g. oberon0_a5.jar
 
@@ -15,19 +15,19 @@ JAR=${PathToJar}${ObJar}
 
 if [ "$1" == "test" ];
 then
-  # Build all examples and test that a .c file is NOT generated, as expected
-  declare -a examples=("3_var_same_scope" "4_const_same_scope" 
-                       "4_type_same_scope" "5_const_var_same" "5_wrong_module")
+  # Build all examples and test that a .c file is generated as expected
+  declare -a examples=("array_type" "array_var" "const_len_array" "record"
+                       "Sample" "typed_array_in_proc")
   declare r=0
    for file in ${examples[@]}
     do
       java -Xss4M -Xmx1800M -jar ${PathToJar}oberon0_a5.jar ${file}.ob
-      if [[ -f ${file}.c ]]
+      if [[ ! -f ${file}.c ]]
         then
           r=1
       fi
     done
-    if [ "$r" == 1 ]
+    if [ "$r" == 1 ] 
       then
         exit 1
     fi
