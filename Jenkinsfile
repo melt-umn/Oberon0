@@ -24,7 +24,7 @@ try {
   stage("Test") {
     def examples=['examples/negative/name_errors/L1',
                   'examples/negative/name_errors/L3',
-                  'examples/negative/name_errors/L4'
+                  'examples/negative/name_errors/L4',
                   'examples/negative/parse_errors/L1',
                   'examples/negative/parse_errors/L2',
                   'examples/negative/parse_errors/L3',
