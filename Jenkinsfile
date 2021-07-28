@@ -39,7 +39,7 @@ try {
                   'examples/positive/L4']
 
     def tasks = [:]
-    tasks << examples.collectEntries { t -> [(t): task_example(t, newenv)] }
+    tasks << examples.collectEntries { t -> [(t): task_test(t, newenv)] }
     
     parallel tasks
   }
@@ -56,25 +56,16 @@ finally {
 } // node
 
 // Build a specific example in the local workspace
-def task_example(String examplepath, newenv){
-  def exts_base = env.WORKSPACE
-  
+def task_test(String examplepath, newenv){  
   return {
     // Each parallel task executes in a seperate node
     node {
-      melt.clearGenerated()
-
-      // Override the env to use the task node's workspace for generated
-      newenv << "SILVER_GEN=${env.WORKSPACE}/generated"
-      
+      melt.clearGenerated()      
       withEnv(newenv) {
-        // Go back to our "parent" workspace, into the example
-        dir("${exts_base}/extensions/Oberon0/${examplepath}") {
+        dir("${examplepath}") {
           sh "./run test"
         }
       }
-      // Blow away these generated files in our private workspace
-      deleteDir()
     }
   }
 }
