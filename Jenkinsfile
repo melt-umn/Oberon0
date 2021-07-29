@@ -55,14 +55,16 @@ finally {
 }
 } // node
 
-// Build a specific example in the local workspace
-def task_test(String examplepath, newenv){  
+def task_test(String examplepath, newenv){
+
+  def exts_base = env.WORKSPACE
+
   return {
     // Each parallel task executes in a seperate node
     node {
       melt.clearGenerated()      
       withEnv(newenv) {
-        dir("${examplepath}") {
+        dir("${exts_base}/${examplepath}") {
           sh "./run test"
         }
       }
