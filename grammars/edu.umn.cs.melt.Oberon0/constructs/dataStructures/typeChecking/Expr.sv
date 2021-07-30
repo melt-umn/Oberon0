@@ -27,6 +27,17 @@ e::LExpr ::= array::LExpr index::Expr
 aspect production fieldAccess
 e::LExpr ::= rec::LExpr fld::Name
 {
+  {- Name will want to look up field names, which requires doing enough
+     type checking to determine the type of `rec`.  We use the threading
+     of `env` and `newEnv` to create the new env.
+  -}
+  fld.env =
+    case rec.type of
+    | recordType(decls,_) -> 
+          (decorate new(decls) with {env = emptyEnv();}).newEnv
+    | _ -> emptyEnv()
+    end;
+
   e.type =
     case rec.type of
     | recordType(decls,_) -> case lookup(fld.name, decls.vars) of
