@@ -1,13 +1,13 @@
 MODULE NonLocalVarProc;
 
 PROCEDURE FOO;
-  VAR x: INTEGER;
-
-  PROCEDURE BAR;
-    BEGIN
-      x := 42;
-    END BAR;
   
+  PROCEDURE BAR;
+    VAR x: INTEGER;
+    BEGIN
+    END BAR;
+  BEGIN
+    x := 42;
   END FOO;
 
 END NonLocalVarProc.

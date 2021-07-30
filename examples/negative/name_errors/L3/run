@@ -16,9 +16,7 @@ JAR=${PathToJar}${ObJar}
 if [ "$1" == "test" ];
 then
   # Build all examples and test that a .c file is NOT generated, as expected
-  # TO DO: add back in "8_non_local_var_proc" to examples array below once
-  #        bug has been resolved (https://github.com/melt-umn/Oberon0/issues/6)
-  declare -a examples=("6_duplicate_procs")
+  declare -a examples=("6_duplicate_procs" "8_non_local_var_proc")
   declare r=0
    for file in ${examples[@]}
     do
