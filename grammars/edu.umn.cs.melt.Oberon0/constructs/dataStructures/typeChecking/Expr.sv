@@ -27,6 +27,24 @@ e::LExpr ::= array::LExpr index::Expr
 aspect production fieldAccess
 e::LExpr ::= rec::LExpr fld::Name
 {
+  {- Name will want to look up field names, which requires doing
+     enough type checking to determine the type of `rec`.  We use the
+     threading of `env` and `newEnv` to create the new env.  By giving
+     `fld` the correct environment we prevent it from generating
+     spurious error messages for undeclared names.  This analysis is
+     done below in the `e.type` and `e.errors` attributes.  Another
+     possible solution is to just define `type` and `errors` on `e`
+     using the values on `fld`.  But I did not want to change this
+     file too much since it is part of the LDTA 2011 tool challenge
+     and we may discuss the current equations somewhere.
+  -}
+  fld.env =
+    case rec.type of
+    | recordType(decls,_) -> 
+          (decorate new(decls) with {env = emptyEnv();}).newEnv
+    | _ -> emptyEnv()
+    end;
+
   e.type =
     case rec.type of
     | recordType(decls,_) -> case lookup(fld.name, decls.vars) of

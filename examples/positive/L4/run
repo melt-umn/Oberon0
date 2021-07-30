@@ -16,9 +16,7 @@ JAR=${PathToJar}${ObJar}
 if [ "$1" == "test" ];
 then
   # Build all examples and test that a .c file is generated as expected
-  # TO DO: add in "record" to examples array below once record declaration
-  #        bug has been resolved. (https://github.com/melt-umn/Oberon0/issues/4)
-  declare -a examples=("array_type" "array_var" "const_len_array"
+  declare -a examples=("array_type" "array_var" "const_len_array" "record"
                        "Sample" "typed_array_in_proc")
   declare r=0
    for file in ${examples[@]}
