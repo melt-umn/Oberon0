@@ -21,6 +21,29 @@ try {
     }
   }
 
+  stage("Test") {
+    def examples=['examples/negative/name_errors/L1',
+                  'examples/negative/name_errors/L3',
+                  'examples/negative/name_errors/L4',
+                  'examples/negative/parse_errors/L1',
+                  'examples/negative/parse_errors/L2',
+                  'examples/negative/parse_errors/L3',
+                  'examples/negative/parse_errors/L4',
+                  'examples/negative/type_errors/L1',
+                  'examples/negative/type_errors/L2',
+                  'examples/negative/type_errors/L3',
+                  'examples/negative/type_errors/L4',
+                  'examples/positive/L1',
+                  'examples/positive/L2',
+                  'examples/positive/L3',
+                  'examples/positive/L4']
+
+    def tasks = [:]
+    tasks << examples.collectEntries { t -> [(t): task_test(t, newenv)] }
+    
+    parallel tasks
+  }
+
   /* If we've gotten all this way with a successful build, don't take up disk space */
   melt.clearGenerated()
 }
@@ -32,3 +55,19 @@ finally {
 }
 } // node
 
+def task_test(String examplepath, newenv){
+
+  def exts_base = env.WORKSPACE
+
+  return {
+    // Each parallel task executes in a seperate node
+    node {
+      melt.clearGenerated()      
+      withEnv(newenv) {
+        dir("${exts_base}/${examplepath}") {
+          sh "./run test"
+        }
+      }
+    }
+  }
+}

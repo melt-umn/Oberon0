@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# Usage:
+# ./run example_file.ob
+
+# Edit path to where Oberon0 jars are kept
+
+PathToJar="../../../"
+
+# Specify which artifact jar you would like to use, e.g. oberon0_a5.jar
+
+ObJar="oberon0_a5.jar"
+
+JAR=${PathToJar}${ObJar}
+
+if [ "$1" == "test" ];
+then
+  # Build all examples and test that a .c file is generated as expected
+  declare -a examples=("case" "for_loop")
+  declare r=0
+   for file in ${examples[@]}
+    do
+      java -Xss4M -Xmx1800M -jar ${PathToJar}oberon0_a5.jar ${file}.ob
+      if [[ ! -f ${file}.c ]]
+        then
+          r=1
+      fi
+    done
+    if [ "$r" == 1 ]
+      then
+        exit 1
+    fi
+else
+  # Build each file specified (if there is more than one)
+  for file in "$@" 
+  do
+    java -Xss4M -Xmx1800M -jar $JAR $file
+  done
+fi

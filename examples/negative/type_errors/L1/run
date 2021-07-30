@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# Usage:
+# ./run example_file.ob
+
+# Edit path to where Oberon0 jars are kept
+
+PathToJar="../../../../"
+
+# Specify which artifact jar you would like to use, e.g. oberon0_a5.jar
+
+ObJar="oberon0_a5.jar"
+
+JAR=${PathToJar}${ObJar}
+
+if [ "$1" == "test" ];
+then
+  # Build all examples and test that a .c file is NOT generated, as expected
+  declare -a examples=("8_non_boolean_if" "10_add_bool_int" "10_add_int_bool"
+                       "10_div_bool_int" "10_div_int_bool" "10_eq_bool_int"
+                       "10_eq_int_bool" "10_ge_bool_int" "10_ge_int_bool"
+                       "10_gt_bool_int" "10_gt_int_bool" "10_le_bool_int"
+                       "10_le_int_bool" "10_lt_bool_int" "10_lt_int_bool"
+                       "10_mod_bool_int" "10_mod_int_bool" "10_mult_bool_int"
+                       "10_mult_int_bool" "10_ne_bool_int" "10_ne_int_bool"
+                       "10_non_bool_while" "10_sub_bool_int" "10_sub_int_bool"
+                       "11_non_bool_elsif")
+  declare r=0
+   for file in ${examples[@]}
+    do
+      java -Xss4M -Xmx1800M -jar ${PathToJar}oberon0_a5.jar ${file}.ob
+      if [[ -f ${file}.c ]]
+        then
+          r=1
+      fi
+    done
+    if [ "$r" == 1 ]
+      then
+        exit 1
+    fi
+else
+  # Build each file specified (if there is more than one)
+  for file in "$@" 
+  do
+    java -Xss4M -Xmx1800M -jar $JAR $file
+  done
+fi

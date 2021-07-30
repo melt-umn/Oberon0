@@ -1,0 +1,10 @@
+MODULE TypeDiffScope;
+
+TYPE FOO = INTEGER;
+
+PROCEDURE f;
+  TYPE FOO = BOOLEAN;
+  
+  END f;
+
+END TypeDiffScope.
