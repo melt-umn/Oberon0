@@ -93,7 +93,7 @@ cls::CaseLabels ::= cl::CaseLabel rest::CaseLabels
 {
   cls.pp = pp:ppConcat([cl.pp, pp:text(", "), rest.pp]);
   
-  cls.caseTranslation = or(cl.caseTranslation, rest.caseTranslation, location=cls.location);
+  cls.caseTranslation = orOp(cl.caseTranslation, rest.caseTranslation, location=cls.location);
 }
 
 nonterminal CaseLabel with location, env, errors, pp, caseTranslation<Expr>, caseExpr;

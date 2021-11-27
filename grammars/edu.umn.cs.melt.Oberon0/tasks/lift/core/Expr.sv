@@ -29,60 +29,60 @@ e::Expr ::= n::String
   e.lifted = e;
 }
 
-aspect production mult
+aspect production mulOp
 e::Expr ::= l::Expr r::Expr
 {
   e.freevars = l.freevars ++ r.freevars;
-  e.lifted = mult(l.lifted, r.lifted, location=e.location);
+  e.lifted = mulOp(l.lifted, r.lifted, location=e.location);
 }
 
-aspect production div
+aspect production divOp
 e::Expr ::= l::Expr r::Expr
 {
   e.freevars = l.freevars ++ r.freevars;
-  e.lifted = div(l.lifted, r.lifted, location=e.location);
+  e.lifted = divOp(l.lifted, r.lifted, location=e.location);
 }
 
-aspect production mod
+aspect production modOp
 e::Expr ::= l::Expr r::Expr
 {
   e.freevars = l.freevars ++ r.freevars;
-  e.lifted = mod(l.lifted, r.lifted, location=e.location);
+  e.lifted = modOp(l.lifted, r.lifted, location=e.location);
 }
 
-aspect production add
+aspect production addOp
 e::Expr ::= l::Expr r::Expr
 {
   e.freevars = l.freevars ++ r.freevars;
-  e.lifted = add(l.lifted, r.lifted, location=e.location);
+  e.lifted = addOp(l.lifted, r.lifted, location=e.location);
 }
 
-aspect production sub
+aspect production subOp
 e::Expr ::= l::Expr r::Expr
 {
   e.freevars = l.freevars ++ r.freevars;
-  e.lifted = sub(l.lifted, r.lifted, location=e.location);
+  e.lifted = subOp(l.lifted, r.lifted, location=e.location);
 }
 
-aspect production not
+aspect production notOp
 e::Expr ::= e1::Expr
 {
   e.freevars = e1.freevars;
-  e.lifted = not(e1.lifted, location=e.location);
+  e.lifted = notOp(e1.lifted, location=e.location);
 }
 
-aspect production and
+aspect production andOp
 e::Expr ::= l::Expr r::Expr
 {
   e.freevars = l.freevars ++ r.freevars;
-  e.lifted = and(l.lifted, r.lifted, location=e.location);
+  e.lifted = andOp(l.lifted, r.lifted, location=e.location);
 }
 
-aspect production or
+aspect production orOp
 e::Expr ::= l::Expr r::Expr
 {
   e.freevars = l.freevars ++ r.freevars;
-  e.lifted = or(l.lifted, r.lifted, location=e.location);
+  e.lifted = orOp(l.lifted, r.lifted, location=e.location);
 }
 
 aspect production eqOp

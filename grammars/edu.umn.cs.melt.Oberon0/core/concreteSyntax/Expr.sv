@@ -8,18 +8,18 @@ concrete productions e::Expr_c
  | '(' e1::Expr_c ')' { e.ast = e1.ast; }
 
 -- Numerical
- | e1::Expr_c '*' e2::Expr_c    { e.ast = mult(e1.ast, e2.ast, location=e.location); }
- | e1::Expr_c 'DIV' e2::Expr_c  { e.ast = div(e1.ast, e2.ast, location=e.location); }
- | e1::Expr_c 'MOD' e2::Expr_c  { e.ast = mod(e1.ast, e2.ast, location=e.location); }
+ | e1::Expr_c '*' e2::Expr_c    { e.ast = mulOp(e1.ast, e2.ast, location=e.location); }
+ | e1::Expr_c 'DIV' e2::Expr_c  { e.ast = divOp(e1.ast, e2.ast, location=e.location); }
+ | e1::Expr_c 'MOD' e2::Expr_c  { e.ast = modOp(e1.ast, e2.ast, location=e.location); }
  | '+' e1::Expr_c               { e.ast = e1.ast; }
- | '-' e1::Expr_c               { e.ast = sub(number("0", location=$1.location), e1.ast, location=e.location); }
- | e1::Expr_c '+' e2::Expr_c    { e.ast = add(e1.ast, e2.ast, location=e.location); }
- | e1::Expr_c '-' e2::Expr_c    { e.ast = sub(e1.ast, e2.ast, location=e.location); }
+ | '-' e1::Expr_c               { e.ast = subOp(number("0", location=$1.location), e1.ast, location=e.location); }
+ | e1::Expr_c '+' e2::Expr_c    { e.ast = addOp(e1.ast, e2.ast, location=e.location); }
+ | e1::Expr_c '-' e2::Expr_c    { e.ast = subOp(e1.ast, e2.ast, location=e.location); }
 
 -- Boolean
- | '~' e1::Expr_c               { e.ast = not(e1.ast, location=e.location); }
- | e1::Expr_c '&' e2::Expr_c    { e.ast = and(e1.ast, e2.ast, location=e.location); }
- | e1::Expr_c 'OR' e2::Expr_c   { e.ast = or(e1.ast, e2.ast, location=e.location); }
+ | '~' e1::Expr_c               { e.ast = notOp(e1.ast, location=e.location); }
+ | e1::Expr_c '&' e2::Expr_c    { e.ast = andOp(e1.ast, e2.ast, location=e.location); }
+ | e1::Expr_c 'OR' e2::Expr_c   { e.ast = orOp(e1.ast, e2.ast, location=e.location); }
 
 -- Comparison
  | e1::Expr_c '=' e2::Expr_c    { e.ast = eqOp(e1.ast, e2.ast, location=e.location); }

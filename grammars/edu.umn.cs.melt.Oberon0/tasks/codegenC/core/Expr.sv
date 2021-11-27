@@ -20,49 +20,49 @@ e::Expr ::= n::String
   e.cTrans = n;
 }
 
-aspect production mult
+aspect production mulOp
 e::Expr ::= l::Expr r::Expr
 {
   e.cTrans = "(" ++ l.cTrans ++ " * " ++ r.cTrans ++ ")";
 }
 
-aspect production div
+aspect production divOp
 e::Expr ::= l::Expr r::Expr
 {
   e.cTrans = "(" ++ l.cTrans ++ " / " ++ r.cTrans ++ ")";
 }
 
-aspect production mod
+aspect production modOp
 e::Expr ::= l::Expr r::Expr
 {
   e.cTrans = "(" ++ l.cTrans ++ " % " ++ r.cTrans ++ ")";
 }
 
-aspect production add
+aspect production addOp
 e::Expr ::= l::Expr r::Expr
 {
   e.cTrans = "(" ++ l.cTrans ++ " + " ++ r.cTrans ++ ")";
 }
 
-aspect production sub
+aspect production subOp
 e::Expr ::= l::Expr r::Expr
 {
   e.cTrans = "(" ++ l.cTrans ++ " - " ++ r.cTrans ++ ")";
 }
 
-aspect production not
+aspect production notOp
 e::Expr ::= e1::Expr
 {
   e.cTrans = "(!" ++ e1.cTrans ++ ")";
 }
 
-aspect production and
+aspect production andOp
 e::Expr ::= l::Expr r::Expr
 {
   e.cTrans = "(" ++ l.cTrans ++ " && " ++ r.cTrans ++ ")";
 }
 
-aspect production or
+aspect production orOp
 e::Expr ::= l::Expr r::Expr
 {
   e.cTrans = "(" ++ l.cTrans ++ " || " ++ r.cTrans ++ ")";

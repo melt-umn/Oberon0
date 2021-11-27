@@ -50,7 +50,7 @@ e::Expr ::= n::String
 
 -- Numerical
 
-abstract production mult
+abstract production mulOp
 e::Expr ::= e1::Expr e2::Expr
 {
   e.pp = pp:parens(pp:ppConcat([e1.pp, pp:text(" * "), e2.pp]));
@@ -63,7 +63,7 @@ e::Expr ::= e1::Expr e2::Expr
   --T2-end
 }
 
-abstract production div
+abstract production divOp
 e::Expr ::= e1::Expr e2::Expr
 {
   e.pp = pp:parens(pp:ppConcat([e1.pp, pp:text(" DIV "), e2.pp]));
@@ -77,7 +77,7 @@ e::Expr ::= e1::Expr e2::Expr
   --T2-end
 }
 
-abstract production mod
+abstract production modOp
 e::Expr ::= e1::Expr e2::Expr
 {
   e.pp = pp:parens(pp:ppConcat([e1.pp, pp:text(" MOD "), e2.pp]));
@@ -91,7 +91,7 @@ e::Expr ::= e1::Expr e2::Expr
   --T2-end
 }
 
-abstract production add
+abstract production addOp
 e::Expr ::= e1::Expr e2::Expr
 {
   e.pp = pp:parens(pp:ppConcat([e1.pp, pp:text(" + "), e2.pp]));
@@ -104,7 +104,7 @@ e::Expr ::= e1::Expr e2::Expr
   --T2-end
 }
 
-abstract production sub
+abstract production subOp
 e::Expr ::= e1::Expr e2::Expr
 {
   e.pp = pp:parens(pp:ppConcat([e1.pp, pp:text(" - "), e2.pp]));
@@ -119,7 +119,7 @@ e::Expr ::= e1::Expr e2::Expr
 
 -- Boolean
 
-abstract production not
+abstract production notOp
 e::Expr ::= e1::Expr
 {
   e.pp = (pp:ppConcat([pp:text("~"), e1.pp]));
@@ -127,7 +127,7 @@ e::Expr ::= e1::Expr
   e.evalConstInt = nothing();  --T2
 }
 
-abstract production and
+abstract production andOp
 e::Expr ::= e1::Expr e2::Expr
 {
   e.pp = pp:parens(pp:ppConcat([e1.pp, pp:text(" & "), e2.pp]));
@@ -135,7 +135,7 @@ e::Expr ::= e1::Expr e2::Expr
   e.evalConstInt = nothing();  --T2
 }
 
-abstract production or
+abstract production orOp
 e::Expr ::= e1::Expr e2::Expr
 {
   e.pp = pp:parens(pp:ppConcat([e1.pp, pp:text(" OR "), e2.pp]));
