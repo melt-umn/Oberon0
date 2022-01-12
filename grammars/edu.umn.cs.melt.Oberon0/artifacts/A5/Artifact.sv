@@ -7,7 +7,7 @@ import edu:umn:cs:melt:Oberon0:components:T5;
 import edu:umn:cs:melt:Oberon0:core:driver;
 
 function main
-IOVal<Integer> ::= args::[String] mainIO::IO
+IOVal<Integer> ::= args::[String] mainIO::IOToken
 {
   return driver(args, L5:parse, mainIO);
 }

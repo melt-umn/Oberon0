@@ -12,7 +12,7 @@ import silver:langutil:pp as pp;
 aspect function driver
 IOVal<Integer> ::= args::[String]
                    parse::(ParseResult<Module_c> ::= String String)
-                   driverIO::IO
+                   driverIO::IOToken
 {
  tasks <- [writeC(filename, ast)];
 }
@@ -33,16 +33,16 @@ t::Task ::= filename::String ast::Decorated Module
   -- lifting transformation, for the benefit of our test harness, which checks this.
   local liftedast2 :: Module = liftedast.lifted;
 
-  local writelifted :: IO = 
+  local writelifted :: IOToken = 
     if null(liftedast.errors) -- For debugging purposes, if the lifting caused errors, write that out!
-    then writeFile(base_filename ++ "_lifted.ob", pp:show(100, liftedast2.pp), t.tioIn)
-    else writeFile(base_filename ++ "_lifted.ob", pp:show(100, liftedast.pp), t.tioIn);
+    then writeFileT(base_filename ++ "_lifted.ob", pp:show(100, liftedast2.pp), t.tioIn)
+    else writeFileT(base_filename ++ "_lifted.ob", pp:show(100, liftedast.pp), t.tioIn);
 
-  local writecfile :: IO = 
+  local writecfile :: IOToken = 
     if null(liftedast.errors) -- Again, for debugging.
-    then writeFile(base_filename ++ ".c", liftedast2.cTrans, writelifted)
+    then writeFileT(base_filename ++ ".c", liftedast2.cTrans, writelifted)
          -- This will cause the compiler to crash, usefully:
-    else unsafeTrace(error(messagesToString(liftedast.errors)), writelifted);
+    else unsafeTraceT(error(messagesToString(liftedast.errors)), writelifted);
 
  -- If there were errors in the original AST, skip this whole task
   t.tioOut = if null(ast.errors) then writecfile else t.tioIn;

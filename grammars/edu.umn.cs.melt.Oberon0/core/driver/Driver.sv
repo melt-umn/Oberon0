@@ -18,11 +18,11 @@ import silver:langutil:pp as pp;
 function driver
 IOVal<Integer> ::= args::[String]
                    parse::(ParseResult<Module_c> ::= String String)
-                   driverIO::IO
+                   driverIO::IOToken
 {
   production filename :: String = head(args);
-  local fileExists :: IOVal<Boolean> = isFile(filename, driverIO);
-  local text :: IOVal<String> = readFile(filename,fileExists.io);
+  local fileExists :: IOVal<Boolean> = isFileT(filename, driverIO);
+  local text :: IOVal<String> = readFileT(filename,fileExists.io);
   local result :: ParseResult<Module_c> = parse(text.iovalue, filename);
   local cst :: Module_c = result.parseTree;
   production ast :: Module = cst.ast;
@@ -39,20 +39,20 @@ IOVal<Integer> ::= args::[String]
 
   return
     if null(args)
-    then ioval(print("No required command line arguments provided.\n", driverIO), 1)
+    then ioval(printT("No required command line arguments provided.\n", driverIO), 1)
     else
     if !fileExists.iovalue
-    then ioval(print("File \"" ++ filename ++ "\" not found.\n\n", fileExists.io), 1)
+    then ioval(printT("File \"" ++ filename ++ "\" not found.\n\n", fileExists.io), 1)
     else
     if !result.parseSuccess 
-    then ioval(print("parse failed.\n" ++ result.parseErrors ++ "\n", text.io), 1)
+    then ioval(printT("parse failed.\n" ++ result.parseErrors ++ "\n", text.io), 1)
     else ioval(allTasks.tioOut, 0);
 }
 
 closed nonterminal Task with tioIn, tioOut;
 
-inherited attribute tioIn :: IO;
-synthesized attribute tioOut :: IO;
+inherited attribute tioIn :: IOToken;
+synthesized attribute tioOut :: IOToken;
 
 {- Actually used tasks -}
 
@@ -61,14 +61,14 @@ t::Task ::= filename::String p_ast::Decorated Module
 { 
   local filenamePP::String = substring(0, length(filename)-3, filename) ++ "_pp.ob";
 
-  t.tioOut = writeFile(filenamePP, pp:show(79,p_ast.pp), t.tioIn);
+  t.tioOut = writeFileT(filenamePP, pp:show(79,p_ast.pp), t.tioIn);
 }
 abstract production writeErrorsTask
 t::Task ::= filename::String p_ast::Decorated Module
 {
   local filenameErrors::String = substring(0, length(filename)-3, filename) ++ ".errors";
 
-  t.tioOut = writeFile(filenameErrors,
+  t.tioOut = writeFileT(filenameErrors,
                        messagesToString(p_ast.errors) ++ "\n\n",
                        t.tioIn);
 }
@@ -77,7 +77,7 @@ t::Task ::= p_ast::Decorated Module
 {
   t.tioOut = if null(p_ast.errors)
              then t.tioIn
-             else print(toString(head(sortBy(messageLte, p_ast.errors)).where.line) ++ "\n\n", t.tioIn);
+             else printT(toString(head(sortBy(messageLte, p_ast.errors)).where.line) ++ "\n\n", t.tioIn);
 }
 
 {- Examples of other tasks -}
@@ -85,13 +85,13 @@ t::Task ::= p_ast::Decorated Module
 abstract production printPPTask
 t::Task ::= filename::String p_ast::Decorated Module
 {
-  t.tioOut = print("Pretty print of program in \"" ++ filename ++ "\":\n" ++
+  t.tioOut = printT("Pretty print of program in \"" ++ filename ++ "\":\n" ++
                    pp:show(79, p_ast.pp) ++ "\n\n", t.tioIn);
 }
 abstract production printErrorsTask
 t::Task ::= filename::String p_ast::Decorated Module
 {
-  t.tioOut = print("Errors of program in \"" ++ filename ++ "\":\n" ++
+  t.tioOut = printT("Errors of program in \"" ++ filename ++ "\":\n" ++
                    messagesToString(p_ast.errors) ++ 
                    "\n\n", t.tioIn );
 }

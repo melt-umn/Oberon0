@@ -66,7 +66,7 @@ aspect production constDecl
 d::Decl ::= id::Name e::Expr
 {
   d.varRefTrans = id.name;
-  d.idNum = genInt();
+  d.idNum = genIntT();
   
   d.lifted = if !d.enclosingProcedure.isJust then lifted else noDecl(location=d.location);
   d.liftedDecls = if !d.enclosingProcedure.isJust then [] else [lifted];
@@ -80,7 +80,7 @@ d::Decl ::= id::Name e::Expr
 aspect production typeDecl
 d::Decl ::= id::TypeName t::TypeExpr
 { 
-  d.idNum = genInt();
+  d.idNum = genIntT();
   d.varRefTrans = error("Only applicable to values");
   
   d.lifted = if !d.enclosingProcedure.isJust then lifted else noDecl(location=d.location);
@@ -96,7 +96,7 @@ aspect production varDecl
 d::Decl ::= id::Name t::TypeExpr
 {
   d.varRefTrans = id.name;
-  d.idNum = genInt();
+  d.idNum = genIntT();
   
   d.lifted = varDecl(name(d.liftedName, location=id.location), t.lifted, location=d.location);
   d.liftedDecls = [];
@@ -127,7 +127,7 @@ function uniqueName
 String ::= start::String un::[String]
 {
   return if contains(start, un)
-         then uniqueName(start ++ "ZZ" ++ toString(genInt()), un)
+         then uniqueName(start ++ "ZZ" ++ toString(genIntT()), un)
          else start;
 }
 
