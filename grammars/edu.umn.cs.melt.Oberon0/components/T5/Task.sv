@@ -42,7 +42,7 @@ t::Task ::= filename::String ast::Decorated Module
     if null(liftedast.errors) -- Again, for debugging.
     then writeFileT(base_filename ++ ".c", liftedast2.cTrans, writelifted)
          -- This will cause the compiler to crash, usefully:
-    else unsafeTraceT(error(messagesToString(liftedast.errors)), writelifted);
+    else unsafeTrace(error(messagesToString(liftedast.errors)), writelifted);
 
  -- If there were errors in the original AST, skip this whole task
   t.tioOut = if null(ast.errors) then writecfile else t.tioIn;
