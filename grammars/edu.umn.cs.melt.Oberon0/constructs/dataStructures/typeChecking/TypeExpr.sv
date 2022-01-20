@@ -3,7 +3,7 @@ grammar edu:umn:cs:melt:Oberon0:constructs:dataStructures:typeChecking;
 aspect production arrayTypeExpr
 t::TypeExpr ::= e::Expr ty::TypeExpr
 {
-  t.type = arrayType(e, ty.type, genIntT());
+  t.type = arrayType(e, ty.type, genInt());
 
   t.errors <- if !check(e.type, integerType())
               then [err(e.location, "Array must have an INTEGER size")]
@@ -19,7 +19,7 @@ t::TypeExpr ::= e::Expr ty::TypeExpr
 aspect production recordTypeExpr
 t::TypeExpr ::= f::Decl
 {
-  t.type = recordType(f, genIntT());
+  t.type = recordType(f, genInt());
 }
 
 {- genInt() is used to simply generate an integer that's unique for this session.

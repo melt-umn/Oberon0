@@ -13,7 +13,7 @@ synthesized attribute sol :: [Decorated Decl] occurs on Decl;
 aspect production procDecl
 d::Decl ::= id::Name formals::Decl ld::Decl s::Stmt endid::Name
 {
-  d.idNum = genIntT();
+  d.idNum = genInt();
 
   d.varRefTrans = error("Only applicable to values");
 
