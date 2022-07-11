@@ -23,7 +23,7 @@ e::Expr ::= n::String
   e.type = integerType();
 }
 
-aspect production mult
+aspect production mulOp
 e::Expr ::= e1::Expr e2::Expr
 {
   e.type = integerType();
@@ -32,7 +32,7 @@ e::Expr ::= e1::Expr e2::Expr
   e.errors <- checkErrors(e2.type, integerType(), "Second operand to *", e2.location);
 }
 
-aspect production div
+aspect production divOp
 e::Expr ::= e1::Expr e2::Expr
 {
   e.type = integerType();
@@ -41,7 +41,7 @@ e::Expr ::= e1::Expr e2::Expr
   e.errors <- checkErrors(e2.type, integerType(), "Second operand to DIV", e2.location);
 }
 
-aspect production mod
+aspect production modOp
 e::Expr ::= e1::Expr e2::Expr
 {
   e.type = integerType();
@@ -50,7 +50,7 @@ e::Expr ::= e1::Expr e2::Expr
   e.errors <- checkErrors(e2.type, integerType(), "Second operand to MOD", e2.location);
 }
 
-aspect production add
+aspect production addOp
 e::Expr ::= e1::Expr e2::Expr
 {
   e.type = integerType();
@@ -59,7 +59,7 @@ e::Expr ::= e1::Expr e2::Expr
   e.errors <- checkErrors(e2.type, integerType(), "Second operand to +", e2.location);
 }
 
-aspect production sub
+aspect production subOp
 e::Expr ::= e1::Expr e2::Expr
 {
   e.type = integerType();
@@ -68,7 +68,7 @@ e::Expr ::= e1::Expr e2::Expr
   e.errors <- checkErrors(e2.type, integerType(), "Second operand to -", e2.location);
 }
 
-aspect production not
+aspect production notOp
 e::Expr ::= e1::Expr
 {
   e.type = booleanType();
@@ -76,7 +76,7 @@ e::Expr ::= e1::Expr
   e.errors <- checkErrors(e1.type, booleanType(), "Operand to ~", e1.location);
 }
 
-aspect production and
+aspect production andOp
 e::Expr ::= e1::Expr e2::Expr
 {
   e.type = booleanType();
@@ -85,7 +85,7 @@ e::Expr ::= e1::Expr e2::Expr
   e.errors <- checkErrors(e2.type, booleanType(), "Second operand to &", e2.location);
 }
 
-aspect production or
+aspect production orOp
 e::Expr ::= e1::Expr e2::Expr
 {
   e.type = booleanType();
