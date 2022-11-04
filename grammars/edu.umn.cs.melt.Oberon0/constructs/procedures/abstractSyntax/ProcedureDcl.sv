@@ -13,8 +13,10 @@ exports edu:umn:cs:melt:Oberon0:constructs:procedures:typeChecking
  - * nothing() indicates it's directly in the Module, rather than a specific
  -   procedure.
  -}
-autocopy attribute enclosingProcedure :: Maybe<Decorated Decl>   --T2
+inherited attribute enclosingProcedure :: Maybe<Decorated Decl>   --T2
   occurs on Decl, Module, Stmt;  --T2
+
+propagate enclosingProcedure on Stmt;
 
 abstract production procDecl
 d::Decl ::= id::Name formals::Decl locals::Decl s::Stmt endid::Name
@@ -80,6 +82,7 @@ d::Decl ::= d1::Decl d2::Decl
   local procs :: [Decorated Decl] = filter(isProcDcl, d.individualDcls);
 --  production attribute pppieces :: String with ++; -- from seqDecl
   pppieces <- map((.pp), procs);
+  propagate enclosingProcedure;
 }
 
 {--
