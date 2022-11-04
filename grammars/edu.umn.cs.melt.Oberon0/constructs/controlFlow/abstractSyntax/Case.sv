@@ -26,15 +26,15 @@ synthesized attribute caseTranslation<a> :: a;
 {--
  - The expression under scrutiny by the CASE statement.
  -}
-autocopy attribute caseExpr :: Expr;
+inherited attribute caseExpr :: Expr;
 {--
  - If this case is not satisfied, what to try next.
  -}
-autocopy attribute caseNext :: Stmt;
+inherited attribute caseNext :: Stmt;
 
 nonterminal Cases with location, env, errors, pp, caseTranslation<Stmt>, caseExpr, caseNext;
 
-propagate errors on Cases;  --T2
+propagate errors, caseExpr, caseNext on Cases;  --T2
 
 abstract production caseOne
 cs::Cases ::= c::Case
@@ -60,7 +60,7 @@ cs::Cases ::= c::Case rest::Cases
 
 nonterminal Case with location, env, errors, pp, caseTranslation<Stmt>, caseExpr, caseNext;
 
-propagate errors on Case;  --T2
+propagate errors, caseExpr, caseNext on Case;  --T2
 
 abstract production caseClause
 c::Case ::= cls::CaseLabels s::Stmt
@@ -79,7 +79,7 @@ c::Case ::= s::Stmt
 
 nonterminal CaseLabels with location, env, errors, pp, caseTranslation<Expr>, caseExpr;
 
-propagate errors on CaseLabels;  --T2
+propagate errors, caseExpr on CaseLabels;  --T2
 
 abstract production oneCaseLabel
 cls::CaseLabels ::= cl::CaseLabel
@@ -98,7 +98,7 @@ cls::CaseLabels ::= cl::CaseLabel rest::CaseLabels
 
 nonterminal CaseLabel with location, env, errors, pp, caseTranslation<Expr>, caseExpr;
 
-propagate errors on CaseLabel;  --T2
+propagate errors, caseExpr on CaseLabel;  --T2
 
 abstract production caseLabel
 cl::CaseLabel ::= e::Expr
