@@ -17,6 +17,7 @@ synthesized attribute newEnv :: Decorated Env;  --T2
 monoid attribute vars :: [Pair<String Decorated Decl>];  --T2
 
 propagate vars on Decl;
+propagate env on Decl excluding seqDecl;
 
 {--
  - Lines up all decls by their left edge.
@@ -161,6 +162,8 @@ d::Decl ::= ids::IdList t::TypeExpr
   --T2-end
 
   forwards to ids.idVarDecls;
+
+  propagate env;
 }
 
 

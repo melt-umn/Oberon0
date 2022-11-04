@@ -2,7 +2,7 @@ grammar edu:umn:cs:melt:Oberon0:constructs:procedures:abstractSyntax;
 
 nonterminal Exprs with location, pp, env, errors;
 
-propagate errors on Exprs;  --T2
+propagate errors, env on Exprs;  --T2
 
 abstract production callDispatch
 s::Stmt ::= f::Name a::Exprs
@@ -22,7 +22,7 @@ s::Stmt ::= f::Name a::Exprs
 {
   s.pp = pp:ppConcat([f.pp, pp:parens(a.pp)]);
   
-  propagate errors;  --T2
+  propagate env, errors;  --T2
 }
 
 
@@ -48,17 +48,20 @@ s::Stmt ::= f::Name e::Exprs
 {
   s.pp = pp:ppConcat([pp:text("Read"), pp:parens(e.pp)]);
   s.errors := e.errors;  --T2
+  propagate env;
 }
 abstract production writeCall
 s::Stmt ::= f::Name e::Exprs
 {
   s.pp = pp:ppConcat([pp:text("Write"), pp:parens(e.pp)]);
   s.errors := e.errors;  --T2
+  propagate env;
 }
 abstract production writeLnCall
 s::Stmt ::= f::Name e::Exprs
 {
   s.pp = pp:text("WriteLn");
   s.errors := e.errors;  --T2
+  propagate env;
 }
 

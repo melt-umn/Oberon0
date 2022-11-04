@@ -6,7 +6,7 @@ e::LExpr ::= array::LExpr index::Expr
 {
   e.pp = pp:cat(array.pp, pp:brackets(index.pp));
   
-  propagate errors;  --T2
+  propagate errors, env;  --T2
   e.evalConstInt = nothing();  --T2
 }
 
@@ -15,7 +15,7 @@ e::LExpr ::= rec::LExpr fld::Name
 {
   e.pp = pp:ppConcat([rec.pp, pp:text("."), fld.pp]);
   
-  propagate errors;  --T2
+  propagate errors, env;  --T2
   e.evalConstInt = nothing();  --T2
 }
 

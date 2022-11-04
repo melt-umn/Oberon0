@@ -8,7 +8,7 @@ s::Stmt ::= e::Expr cs::Cases
     cs.pp, pp:line(),
     pp:text("END")]);
 
-  propagate errors;  --T2
+  propagate errors, env;  --T2
 
   cs.caseExpr = e;
   cs.caseNext = skip(location=cs.location);
@@ -34,7 +34,7 @@ inherited attribute caseNext :: Stmt;
 
 nonterminal Cases with location, env, errors, pp, caseTranslation<Stmt>, caseExpr, caseNext;
 
-propagate errors, caseExpr, caseNext on Cases;  --T2
+propagate errors, caseExpr, caseNext, env on Cases;  --T2
 
 abstract production caseOne
 cs::Cases ::= c::Case
@@ -60,7 +60,7 @@ cs::Cases ::= c::Case rest::Cases
 
 nonterminal Case with location, env, errors, pp, caseTranslation<Stmt>, caseExpr, caseNext;
 
-propagate errors, caseExpr, caseNext on Case;  --T2
+propagate errors, caseExpr, caseNext, env on Case;  --T2
 
 abstract production caseClause
 c::Case ::= cls::CaseLabels s::Stmt
@@ -79,7 +79,7 @@ c::Case ::= s::Stmt
 
 nonterminal CaseLabels with location, env, errors, pp, caseTranslation<Expr>, caseExpr;
 
-propagate errors, caseExpr on CaseLabels;  --T2
+propagate errors, caseExpr, env on CaseLabels;  --T2
 
 abstract production oneCaseLabel
 cls::CaseLabels ::= cl::CaseLabel
@@ -98,7 +98,7 @@ cls::CaseLabels ::= cl::CaseLabel rest::CaseLabels
 
 nonterminal CaseLabel with location, env, errors, pp, caseTranslation<Expr>, caseExpr;
 
-propagate errors, caseExpr on CaseLabel;  --T2
+propagate errors, caseExpr, env on CaseLabel;  --T2
 
 abstract production caseLabel
 cl::CaseLabel ::= e::Expr

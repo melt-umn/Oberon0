@@ -14,7 +14,7 @@ nonterminal LExpr with location, pp,
  -}
 synthesized attribute evalConstInt :: Maybe<Integer>;  --T2
 
-propagate errors on Expr, LExpr;  -- T2
+propagate errors, env on Expr, LExpr;  -- T2
 
 abstract production idAccess
 e::LExpr ::= id::Name
