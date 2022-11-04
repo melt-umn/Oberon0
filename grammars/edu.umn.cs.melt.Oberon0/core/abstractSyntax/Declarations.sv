@@ -176,12 +176,15 @@ synthesized attribute idVarDecls :: Decl;  --T2
 {--
  - The type of each of the identifiers.
  -}
-autocopy attribute idVarDeclTypeExpr :: TypeExpr;  --T2
+inherited attribute idVarDeclTypeExpr :: TypeExpr;  --T2
+propagate idVarDeclTypeExpr on IdList;
+
 {--
  - The kind of declaration. Here, only varDecl. But, the procedure
  - extension will also have "by value" and "by reference" decls as well.
  -}
-autocopy attribute idVarDeclProd :: (Decl ::= Name TypeExpr Location);  --T2
+inherited attribute idVarDeclProd :: (Decl ::= Name TypeExpr Location);  --T2
+propagate idVarDeclProd on IdList;
 
 abstract production idListOne
 ids::IdList ::= id::Name
