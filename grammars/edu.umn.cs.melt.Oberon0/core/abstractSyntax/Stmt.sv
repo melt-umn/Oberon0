@@ -3,7 +3,7 @@ grammar edu:umn:cs:melt:Oberon0:core:abstractSyntax;
 nonterminal Stmt with location, pp,
   env, errors;  --T2
 
-propagate errors on Stmt;  --T2
+propagate errors, env on Stmt;  --T2
 
 abstract production seqStmt
 s::Stmt ::= s1::Stmt s2::Stmt

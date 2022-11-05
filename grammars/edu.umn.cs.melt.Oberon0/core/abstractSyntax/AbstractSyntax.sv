@@ -10,6 +10,6 @@ option edu:umn:cs:melt:Oberon0:constructs:procedures;
  - Environments information.
  - See Env.sv for an explanation of why this is Decorated.
  -}
-autocopy attribute env :: Decorated Env;  --T2
+inherited attribute env :: Decorated Env;  --T2
 
 

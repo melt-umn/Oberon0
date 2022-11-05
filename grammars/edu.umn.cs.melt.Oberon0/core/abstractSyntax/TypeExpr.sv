@@ -2,7 +2,7 @@ grammar edu:umn:cs:melt:Oberon0:core:abstractSyntax;
 
 nonterminal TypeExpr with location, pp, env, errors;
 
-propagate errors on TypeExpr;
+propagate errors, env on TypeExpr;
 
 abstract production nominalTypeExpr
 t::TypeExpr ::= id::TypeName

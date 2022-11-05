@@ -13,7 +13,7 @@ t::TypeExpr ::= e::Expr ty::TypeExpr
 {
   t.pp = pp:ppConcat([pp:text("ARRAY "), e.pp, pp:text(" OF "), ty.pp]);
   
-  propagate errors;  --T2
+  propagate errors, env;  --T2
 }
 
 abstract production recordTypeExpr

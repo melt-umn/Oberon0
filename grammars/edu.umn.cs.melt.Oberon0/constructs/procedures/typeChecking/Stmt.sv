@@ -39,7 +39,9 @@ inherited attribute paramsKnown :: Maybe<[Pair<String  Decorated Decl>]> occurs 
 {--
  - The name of the procedure being called, given to the parameter list for error reporting.
  -}
-autocopy attribute procName :: Decorated Name occurs on Exprs;
+inherited attribute procName :: Decorated Name occurs on Exprs;
+
+propagate procName on Exprs;
 
 aspect production nilExprs
 es::Exprs ::=
@@ -51,7 +53,6 @@ es::Exprs ::=
     | just(_::_) -> [err(es.procName.location, "Insufficient parameters supplied to procedure call " ++ es.procName.name)]
     end;
 }
-
 
 aspect production consExprs
 es::Exprs ::= e::Expr rest::Exprs
@@ -76,6 +77,7 @@ es::Exprs ::= e::Expr rest::Exprs
     | just([]) -> nothing()
     | just(_::t) -> just(t)
     end;
+
 }
 
 aspect production readCall

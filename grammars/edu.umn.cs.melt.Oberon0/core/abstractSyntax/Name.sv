@@ -3,6 +3,8 @@ grammar edu:umn:cs:melt:Oberon0:core:abstractSyntax;
 nonterminal Name with location, pp,
   env, errors, lookupName, name; --T2
 
+propagate env on Name;
+
 {--
  - Focus most of the name-lookup code on names themselves.
  - This attribute is the result of looking up the name in the environment.
@@ -33,6 +35,8 @@ n::Name ::= s::String
 
 nonterminal TypeName with location, pp,
   env, errors, lookupName, name;  --T2
+
+propagate env on TypeName;
 
 abstract production typeName
 n::TypeName ::= s::String

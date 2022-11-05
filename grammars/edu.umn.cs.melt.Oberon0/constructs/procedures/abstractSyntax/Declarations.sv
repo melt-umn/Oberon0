@@ -25,6 +25,7 @@ d::Decl ::= id::Name t::TypeExpr
    d.individualDcls := [d];
    d.vars := [pair(id.name, d)];
    d.newEnv = addDefs(valueDef(id.name, d), d.env);
+   propagate env;
   --T2-end
   
   forwards to varDecl(id, t, location=d.location);
@@ -39,6 +40,7 @@ d::Decl ::= id::Name t::TypeExpr
    d.individualDcls := [d];
    d.vars := [pair(id.name, d)];
    d.newEnv = addDefs(valueDef(id.name, d), d.env);
+   propagate env;
   --T2-end
 
   forwards to varDecl(id, t, location=d.location);

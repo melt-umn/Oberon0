@@ -17,6 +17,7 @@ synthesized attribute newEnv :: Decorated Env;  --T2
 monoid attribute vars :: [Pair<String Decorated Decl>];  --T2
 
 propagate vars on Decl;
+propagate env on Decl excluding seqDecl;
 
 {--
  - Lines up all decls by their left edge.
@@ -161,6 +162,8 @@ d::Decl ::= ids::IdList t::TypeExpr
   --T2-end
 
   forwards to ids.idVarDecls;
+
+  propagate env;
 }
 
 
@@ -176,12 +179,15 @@ synthesized attribute idVarDecls :: Decl;  --T2
 {--
  - The type of each of the identifiers.
  -}
-autocopy attribute idVarDeclTypeExpr :: TypeExpr;  --T2
+inherited attribute idVarDeclTypeExpr :: TypeExpr;  --T2
+propagate idVarDeclTypeExpr on IdList;
+
 {--
  - The kind of declaration. Here, only varDecl. But, the procedure
  - extension will also have "by value" and "by reference" decls as well.
  -}
-autocopy attribute idVarDeclProd :: (Decl ::= Name TypeExpr Location);  --T2
+inherited attribute idVarDeclProd :: (Decl ::= Name TypeExpr Location);  --T2
+propagate idVarDeclProd on IdList;
 
 abstract production idListOne
 ids::IdList ::= id::Name

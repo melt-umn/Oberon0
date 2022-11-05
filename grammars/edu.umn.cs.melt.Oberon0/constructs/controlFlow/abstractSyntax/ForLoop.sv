@@ -30,7 +30,7 @@ s::Stmt ::= id::Name lower::Expr upper::Expr step::Expr body::Stmt
     pp:text("DONE")]);
 
   --T2-start
-  propagate errors;
+  propagate errors, env;
 
   s.errors <- case lookupValue(id.name, s.env) of
               | just(constDecl(_,_)) -> [err(s.location, "FOR loop variable references a constant, not a variable")]
