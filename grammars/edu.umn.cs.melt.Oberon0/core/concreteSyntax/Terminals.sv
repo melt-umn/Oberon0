@@ -20,12 +20,12 @@ terminal Or_t		'OR'  precedence = 5, association = left,
                               lexer classes { KEYWORD };
 terminal And_t		'&'   precedence = 6, association = left;
 
-terminal EQ_t		'='   precedence = 9;
-terminal NEQ_t		'#'   precedence = 9;
-terminal GT_t		'>'   precedence = 9;
-terminal LT_t		'<'   precedence = 9;
-terminal GTEQ_t		'>='  precedence = 9;
-terminal LTEQ_t		'<='  precedence = 9;
+terminal EQ_t		'='   precedence = 9, association = none;
+terminal NEQ_t		'#'   precedence = 9, association = none;
+terminal GT_t		'>'   precedence = 9, association = none;
+terminal LT_t		'<'   precedence = 9, association = none;
+terminal GTEQ_t		'>='  precedence = 9, association = none;
+terminal LTEQ_t		'<='  precedence = 9, association = none;
 
 terminal Plus_t		'+'   precedence = 11, association = left;
 terminal Minus_t	'-'   precedence = 11, association = left;
