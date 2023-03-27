@@ -1,8 +1,17 @@
 package edu.umn.cs.melt.oberon0.langserver;
 
+import java.util.concurrent.CompletableFuture;
+
+import org.eclipse.lsp4j.InitializeParams;
+import org.eclipse.lsp4j.InitializeResult;
 import org.eclipse.lsp4j.services.LanguageServer;
+import org.eclipse.lsp4j.services.TextDocumentService;
+import org.eclipse.lsp4j.services.WorkspaceService;
+
 
 public class Oberon0LanguageServer implements LanguageServer {
+
+  private Oberon0LanguageService service;
 
   @Override
 	public CompletableFuture<InitializeResult> initialize(InitializeParams params) {
@@ -20,28 +29,12 @@ public class Oberon0LanguageServer implements LanguageServer {
 
 	@Override
 	public TextDocumentService getTextDocumentService() {
-		return this;
+		return this.service;
 	}
 
 	@Override
 	public WorkspaceService getWorkspaceService() {
-		return this;
-	}
-
-	@Override
-	public void didOpen(DidOpenTextDocumentParams params) {
-	}
-
-	@Override
-	public void didChange(DidChangeTextDocumentParams params) {
-	}
-
-	@Override
-	public void didClose(DidCloseTextDocumentParams params) {
-	}
-
-	@Override
-	public void didSave(DidSaveTextDocumentParams params) {
+		return this.service;
 	}
 
 }
