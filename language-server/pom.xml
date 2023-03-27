@@ -15,6 +15,7 @@
     </dependencies>
     <modules>
         <module>langserver</module>
+        <module>launcher</module>
     </modules>
     <build>
         <plugins>
