@@ -4,6 +4,8 @@ import java.util.concurrent.CompletableFuture;
 
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializeResult;
+import org.eclipse.lsp4j.ServerCapabilities;
+
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageClientAware;
 import org.eclipse.lsp4j.services.LanguageServer;
@@ -16,9 +18,18 @@ public class Oberon0LanguageServer implements LanguageServer, LanguageClientAwar
   private Oberon0LanguageService service;
   private LanguageClient client;
 
+  public Oberon0LanguageServer() {
+    this.service = new Oberon0LanguageService();
+  }
+
   @Override
 	public CompletableFuture<InitializeResult> initialize(InitializeParams params) {
-		throw new UnsupportedOperationException();
+		System.err.println("Initializing Oberon0 language server");
+
+    ServerCapabilities capabilities = new ServerCapabilities();
+
+    final InitializeResult initializeResult = new InitializeResult(capabilities);
+    return CompletableFuture.supplyAsync(()->initializeResult);
 	}
 
 	@Override
