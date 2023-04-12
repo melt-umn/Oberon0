@@ -46,7 +46,7 @@
           },
           "Oberon0.parserName": {
             "type": "string",
-            "default": "silver:compiler:composed:Default:svParse",
+            "default": "edu:umn:cs:melt:Oberon0:components:L4:parse",
             "description": "Full name of the Silver parser to use"
           }
         }
