@@ -42,12 +42,13 @@
         "properties": {
           "Oberon0.compilerJar": {
             "type": "string",
+            "default": "oberon0_a5.jar",
             "description": "Path to the jar containing an alternate version of the silver-oberon0 compiler. This can be a relative path from the first workspace folder."
           },
           "Oberon0.parserName": {
             "type": "string",
             "default": "edu:umn:cs:melt:Oberon0:components:L4:parse",
-            "description": "Full name of the Silver parser to use"
+            "description": "Full name of the Oberon0 parser to use"
           }
         }
       }
