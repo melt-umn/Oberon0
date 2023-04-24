@@ -1,7 +1,11 @@
 package edu.umn.cs.melt.oberon0.langserver;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -10,15 +14,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.nio.file.Path;
 import java.util.function.Supplier;
 
-import org.eclipse.lsp4j.DidOpenTextDocumentParams;
 import org.eclipse.lsp4j.DidChangeConfigurationParams;
 import org.eclipse.lsp4j.DidChangeTextDocumentParams;
 import org.eclipse.lsp4j.DidChangeWatchedFilesParams;
 import org.eclipse.lsp4j.DidCloseTextDocumentParams;
+import org.eclipse.lsp4j.DidOpenTextDocumentParams;
 import org.eclipse.lsp4j.DidSaveTextDocumentParams;
+import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.SemanticTokens;
 import org.eclipse.lsp4j.SemanticTokensParams;
 import org.eclipse.lsp4j.WorkspaceFolder;
@@ -27,11 +31,15 @@ import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.TextDocumentService;
 import org.eclipse.lsp4j.services.WorkspaceService;
 
-import common.DecoratedNode;
+import common.ConsCell;
+import common.OriginContext;
 import common.SilverCopperParser;
+import common.StringCatter;
 import edu.umn.cs.melt.lsp4jutil.CopperParserNodeFactory;
 import edu.umn.cs.melt.lsp4jutil.CopperSemanticTokenEncoder;
+import edu.umn.cs.melt.lsp4jutil.Util;
 import edu.umn.cs.melt.Oberon0.core.concreteSyntax.NModule_c;
+import edu.umn.cs.melt.Oberon0.core.driver.PlspDriver;
 
 public class Oberon0LanguageService implements TextDocumentService, WorkspaceService {
 
@@ -39,30 +47,18 @@ public class Oberon0LanguageService implements TextDocumentService, WorkspaceSer
   private List<WorkspaceFolder> folders;
   private Map<String, String> fileContents = new HashMap<>();
   private Map<String, Integer> fileVersions = new HashMap<>();
+  private Set<File> buildFiles = new HashSet<>();
   private Map<String, Integer> savedVersions = new HashMap<>();
-  private String generated;
 
-  private String oberon0Grammars = null;
-
-  public Oberon0LanguageService() {
-      try {
-          generated = Files.createTempDirectory("generated").toString() + "/";
-      } catch (IOException e) {
-          e.printStackTrace();
-      }
-  }
+  public Oberon0LanguageService() {}
 
   public void setClient(LanguageClient client) {
     this.client = client;
   }
 
-  public void setOberon0GrammarsPath(Path path) {
-    this.oberon0Grammars = path.toString() + "/";
-  }
-
   public void setWorkspaceFolders(List<WorkspaceFolder> folders) {
       this.folders = folders;
-      //refreshWorkspace();
+      refreshWorkspace();
   }
 
 	@Override
@@ -134,4 +130,57 @@ public class Oberon0LanguageService implements TextDocumentService, WorkspaceSer
       });
   }
 
+  private void refreshWorkspace() {
+
+      for (WorkspaceFolder folder : folders) {
+          URI uri;
+          try {
+              uri = new URI(folder.getUri());
+          } catch (URISyntaxException e) {
+              throw new IllegalArgumentException("Invalid URI", e);
+          }
+          findObFiles(new File(uri));
+      }
+
+      Runnable buildAll = () -> {
+        for (File file : buildFiles) {
+          doBuild(file);
+        } 
+      };
+
+      CompletableFuture.runAsync(buildAll);
+
+  }
+
+  private void findObFiles(File root) {
+      for (File file : root.listFiles()) {
+          if (file.isDirectory()) {
+              findObFiles(file);
+          } else if (file.getName().endsWith(".ob")) {
+            buildFiles.add(file);
+          } 
+      }
+  }
+
+  private void doBuild(File file) {
+    String uri = file.toURI().toString();
+    System.err.println("Building: " + uri);
+    if (parserFn == null) {
+        throw new IllegalStateException("Build requested when parser has not been loaded");
+    }
+
+    String filePath = file.getAbsolutePath();
+    StringCatter filename = new StringCatter(filePath);
+
+    String contents;
+    try {
+      contents = Files.readString(Path.of(filePath));
+      ConsCell messages = PlspDriver.invoke(OriginContext.FFI_CONTEXT, new StringCatter(contents), filename, parserFn);
+      client.publishDiagnostics(new PublishDiagnosticsParams(uri, Util.messagesToDiagnostics(messages, uri)));
+    } catch (IOException e) {
+      // TODO: Auto-generated catch block
+      e.printStackTrace();
+    }
+     
+  }
 }

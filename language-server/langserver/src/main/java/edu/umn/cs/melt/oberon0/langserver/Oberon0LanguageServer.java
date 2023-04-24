@@ -83,6 +83,14 @@ public class Oberon0LanguageServer implements LanguageServer, LanguageClientAwar
       loader = Util.getJarClassLoader(jarPath);
     }
 
+    // Initialize Oberon0 grammars
+    // Includes parser & driver
+    try {
+        Util.initGrammar("edu:umn:cs:melt:Oberon0:artifacts:A5", loader);
+    } catch (SecurityException | ReflectiveOperationException e) {
+        client.showMessage(new MessageParams(MessageType.Error, "Error loading compiler jar " + compilerJar + ": " + e.toString()));
+    }
+
     // Load the specified parser
     boolean loadedParser = false;
     try {
@@ -100,7 +108,11 @@ public class Oberon0LanguageServer implements LanguageServer, LanguageClientAwar
     } catch (IOException | URISyntaxException e) {
         throw new RuntimeException(e);
     }
-    service.setOberon0GrammarsPath(oberon0Grammars);
+
+    // Initialize the project folder(s)
+    if (initializeParams.getWorkspaceFolders() != null) {
+        service.setWorkspaceFolders(initializeParams.getWorkspaceFolders());
+    }
 
     // Set the capabilities of the LS to inform the client.
     ServerCapabilities capabilities = new ServerCapabilities();
