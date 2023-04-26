@@ -16,6 +16,8 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
+import org.eclipse.lsp4j.CreateFilesParams;
+import org.eclipse.lsp4j.DeleteFilesParams;
 import org.eclipse.lsp4j.DidChangeConfigurationParams;
 import org.eclipse.lsp4j.DidChangeTextDocumentParams;
 import org.eclipse.lsp4j.DidChangeWatchedFilesParams;
@@ -23,6 +25,7 @@ import org.eclipse.lsp4j.DidCloseTextDocumentParams;
 import org.eclipse.lsp4j.DidOpenTextDocumentParams;
 import org.eclipse.lsp4j.DidSaveTextDocumentParams;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
+import org.eclipse.lsp4j.RenameFilesParams;
 import org.eclipse.lsp4j.SemanticTokens;
 import org.eclipse.lsp4j.SemanticTokensParams;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
@@ -64,7 +67,7 @@ public class Oberon0LanguageService implements TextDocumentService, WorkspaceSer
 
 	@Override
 	public void didOpen(DidOpenTextDocumentParams params) {
-    System.err.println("Opened " + params);
+    //System.err.println("Opened " + params);
     String uri = params.getTextDocument().getUri();
     fileContents.put(uri, params.getTextDocument().getText());
     fileVersions.put(uri, params.getTextDocument().getVersion());
@@ -74,7 +77,7 @@ public class Oberon0LanguageService implements TextDocumentService, WorkspaceSer
 
 	@Override
 	public void didChange(DidChangeTextDocumentParams params) {
-    System.err.println("Changed " + params);
+    //System.err.println("Changed " + params);
     String uri = params.getTextDocument().getUri();
     for (TextDocumentContentChangeEvent change : params.getContentChanges()) {
         fileContents.put(uri, change.getText());
@@ -84,7 +87,7 @@ public class Oberon0LanguageService implements TextDocumentService, WorkspaceSer
 
 	@Override
 	public void didClose(DidCloseTextDocumentParams params) {
-    System.err.println("Closed " + params);
+    //System.err.println("Closed " + params);
     String uri = params.getTextDocument().getUri();
     fileContents.remove(uri);
     fileVersions.remove(uri);
@@ -93,7 +96,7 @@ public class Oberon0LanguageService implements TextDocumentService, WorkspaceSer
 
 	@Override
 	public void didSave(DidSaveTextDocumentParams params) {
-    System.err.println("Saved " + params);
+    //System.err.println("Saved " + params);
     String uri = params.getTextDocument().getUri();
     if (!fileVersions.containsKey(uri)) {
         throw new IllegalStateException("File saved before it was changed");
@@ -110,6 +113,21 @@ public class Oberon0LanguageService implements TextDocumentService, WorkspaceSer
   @Override
   public void didChangeWatchedFiles(DidChangeWatchedFilesParams params) {
 
+  }
+  
+  @Override
+  public void didCreateFiles(CreateFilesParams params) {
+    refreshWorkspace();
+  }
+
+  @Override
+  public void didDeleteFiles(DeleteFilesParams params) {
+    refreshWorkspace();
+  }
+
+  @Override
+  public void didRenameFiles(RenameFilesParams params) {
+    refreshWorkspace();
   }
 
   public static final List<String> tokenTypes = Arrays.asList(new String[] {
@@ -151,6 +169,7 @@ public class Oberon0LanguageService implements TextDocumentService, WorkspaceSer
   }
 
   private void refreshWorkspace() {
+      buildFiles.clear();
 
       for (WorkspaceFolder folder : folders) {
           URI uri;
@@ -184,7 +203,7 @@ public class Oberon0LanguageService implements TextDocumentService, WorkspaceSer
   }
 
   private void doBuild(URI uri) {
-    System.err.println("Building: " + uri.toString());
+    //System.err.println("Building: " + uri.toString());
 
     if (parserFn == null) {
         throw new IllegalStateException("Build requested when parser has not been loaded");

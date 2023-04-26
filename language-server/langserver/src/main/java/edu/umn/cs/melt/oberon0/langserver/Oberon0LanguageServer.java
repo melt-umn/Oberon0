@@ -7,6 +7,10 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+import org.eclipse.lsp4j.FileOperationFilter;
+import org.eclipse.lsp4j.FileOperationOptions;
+import org.eclipse.lsp4j.FileOperationPattern;
+import org.eclipse.lsp4j.FileOperationsServerCapabilities;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializeResult;
 import org.eclipse.lsp4j.MessageParams;
@@ -17,6 +21,7 @@ import org.eclipse.lsp4j.SemanticTokensWithRegistrationOptions;
 import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.TextDocumentSyncKind;
 import org.eclipse.lsp4j.WorkspaceFolder;
+import org.eclipse.lsp4j.WorkspaceServerCapabilities;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageClientAware;
 import org.eclipse.lsp4j.services.LanguageServer;
@@ -114,6 +119,17 @@ public class Oberon0LanguageServer implements LanguageServer, LanguageClientAwar
                     Oberon0LanguageService.tokenTypes, Oberon0LanguageService.tokenModifiers),
                 new SemanticTokensServerFull(false), false));
     }
+
+    FileOperationOptions fileOperationOptions = new FileOperationOptions(
+        List.of(new FileOperationFilter(new FileOperationPattern("**/*.ob")))
+    );
+    FileOperationsServerCapabilities fileOperations = new FileOperationsServerCapabilities();
+    fileOperations.setDidCreate(fileOperationOptions);
+    fileOperations.setDidDelete(fileOperationOptions);
+    fileOperations.setDidRename(fileOperationOptions);
+    WorkspaceServerCapabilities workspaceServer = new WorkspaceServerCapabilities();
+    workspaceServer.setFileOperations(fileOperations);
+    capabilities.setWorkspace(workspaceServer);
 
     final InitializeResult initializeResult = new InitializeResult(capabilities);
     return CompletableFuture.supplyAsync(()->initializeResult);
