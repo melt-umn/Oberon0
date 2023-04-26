@@ -1,9 +1,7 @@
 package edu.umn.cs.melt.oberon0.langserver;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -19,7 +17,6 @@ import org.eclipse.lsp4j.SemanticTokensWithRegistrationOptions;
 import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.TextDocumentSyncKind;
 import org.eclipse.lsp4j.WorkspaceFolder;
-
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageClientAware;
 import org.eclipse.lsp4j.services.LanguageServer;
@@ -28,13 +25,14 @@ import org.eclipse.lsp4j.services.WorkspaceService;
 
 import com.google.gson.JsonObject;
 
-import edu.umn.cs.melt.lsp4jutil.Util;
 import edu.umn.cs.melt.Oberon0.core.concreteSyntax.NModule_c;
+import edu.umn.cs.melt.lsp4jutil.Util;
 
 public class Oberon0LanguageServer implements LanguageServer, LanguageClientAware {
 
   private Oberon0LanguageService service;
   private LanguageClient client;
+  private int errorCode = 1;
 
   public Oberon0LanguageServer() {
     this.service = new Oberon0LanguageService();
@@ -85,6 +83,7 @@ public class Oberon0LanguageServer implements LanguageServer, LanguageClientAwar
 
     // Initialize Oberon0 grammars
     // Includes parser & driver
+    // TODO: should the init grammar be specifiable?
     try {
         Util.initGrammar("edu:umn:cs:melt:Oberon0:artifacts:A5", loader);
     } catch (SecurityException | ReflectiveOperationException e) {
@@ -98,15 +97,6 @@ public class Oberon0LanguageServer implements LanguageServer, LanguageClientAwar
         loadedParser = true;
     } catch (SecurityException | ReflectiveOperationException e) {
         client.showMessage(new MessageParams(MessageType.Error, "Error loading parser " + parserName + " from jar: " + e.toString()));
-    }
-
-    // Set up the Oberon0 grammars folder?
-    Path oberon0Grammars;
-    try {
-        oberon0Grammars = Files.createTempDirectory("oberon0_grammars");
-        Util.copyFromJar(getClass(), "grammars/", oberon0Grammars);
-    } catch (IOException | URISyntaxException e) {
-        throw new RuntimeException(e);
     }
 
     // Initialize the project folder(s)
@@ -132,11 +122,15 @@ public class Oberon0LanguageServer implements LanguageServer, LanguageClientAwar
 
 	@Override
 	public CompletableFuture<Object> shutdown() {
-		throw new UnsupportedOperationException();
-	}
+    // If shutdown request comes from client, set the error code to 0.
+    errorCode = 0;
+    return null;	
+  }
 
 	@Override
 	public void exit() {
+    // Kill the LS on exit request from client.
+    System.exit(errorCode);
 	}
 
 	@Override
