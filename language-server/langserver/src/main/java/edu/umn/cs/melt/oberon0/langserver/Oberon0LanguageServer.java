@@ -120,6 +120,8 @@ public class Oberon0LanguageServer implements LanguageServer, LanguageClientAwar
                 new SemanticTokensServerFull(false), false));
     }
 
+    capabilities.setDeclarationProvider(true);
+
     FileOperationOptions fileOperationOptions = new FileOperationOptions(
         List.of(new FileOperationFilter(new FileOperationPattern("**/*.ob")))
     );

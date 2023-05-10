@@ -15,8 +15,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import org.eclipse.lsp4j.CreateFilesParams;
+import org.eclipse.lsp4j.DeclarationParams;
 import org.eclipse.lsp4j.DeleteFilesParams;
 import org.eclipse.lsp4j.DidChangeConfigurationParams;
 import org.eclipse.lsp4j.DidChangeTextDocumentParams;
@@ -24,6 +26,8 @@ import org.eclipse.lsp4j.DidChangeWatchedFilesParams;
 import org.eclipse.lsp4j.DidCloseTextDocumentParams;
 import org.eclipse.lsp4j.DidOpenTextDocumentParams;
 import org.eclipse.lsp4j.DidSaveTextDocumentParams;
+import org.eclipse.lsp4j.Location;
+import org.eclipse.lsp4j.LocationLink;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.RenameFilesParams;
 import org.eclipse.lsp4j.SemanticTokens;
@@ -31,19 +35,26 @@ import org.eclipse.lsp4j.SemanticTokensParams;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.lsp4j.WorkspaceFolder;
 import org.eclipse.lsp4j.jsonrpc.CompletableFutures;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.TextDocumentService;
 import org.eclipse.lsp4j.services.WorkspaceService;
 
 import common.ConsCell;
+import common.DecoratedNode;
 import common.OriginContext;
 import common.SilverCopperParser;
 import common.StringCatter;
+import common.javainterop.ConsCellCollection;
 import edu.umn.cs.melt.Oberon0.core.concreteSyntax.NModule_c;
 import edu.umn.cs.melt.Oberon0.core.driver.PlspDriver;
+import edu.umn.cs.melt.Oberon0.langserver.PfindDeclLocation;
 import edu.umn.cs.melt.lsp4jutil.CopperParserNodeFactory;
 import edu.umn.cs.melt.lsp4jutil.CopperSemanticTokenEncoder;
 import edu.umn.cs.melt.lsp4jutil.Util;
+import silver.core.NLocation;
+import silver.core.NPair;
+
 
 public class Oberon0LanguageService implements TextDocumentService, WorkspaceService {
 
@@ -53,6 +64,7 @@ public class Oberon0LanguageService implements TextDocumentService, WorkspaceSer
   private Map<String, Integer> fileVersions = new HashMap<>();
   private Set<URI> buildFiles = new HashSet<>();
   private Map<String, Integer> savedVersions = new HashMap<>();
+  private Map<String, Object> savedModules = new HashMap<>();
 
   public Oberon0LanguageService() {}
 
@@ -128,6 +140,31 @@ public class Oberon0LanguageService implements TextDocumentService, WorkspaceSer
   @Override
   public void didRenameFiles(RenameFilesParams params) {
     refreshWorkspace();
+  }
+
+  @Override
+  public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> declaration(DeclarationParams params) {
+    return CompletableFutures.computeAsync((cancelChecker) -> {
+      String fileName = "";
+      try {
+          fileName = new URI(params.getTextDocument().getUri()).getPath();
+      } catch (URISyntaxException e) {
+          e.printStackTrace();
+      }
+      if (savedModules.get(fileName) == null) {
+        System.err.println("No modules saved for " + fileName);
+        return Either.forLeft(List.of());
+      }
+
+      return Either.forLeft(new ConsCellCollection<NLocation>(
+          PfindDeclLocation.invoke(OriginContext.FFI_CONTEXT,
+          new StringCatter(fileName), 
+          params.getPosition().getLine() + 1, params.getPosition().getCharacter(), 
+          savedModules.get(fileName)))
+          .stream()
+          .map((loc) -> new Location("file://" + Util.locationToFile(loc), Util.locationToRange(loc)))
+          .collect(Collectors.toList()));
+    });
   }
 
   public static final List<String> tokenTypes = Arrays.asList(new String[] {
@@ -212,16 +249,23 @@ public class Oberon0LanguageService implements TextDocumentService, WorkspaceSer
     String filePath = uri.getPath();
     StringCatter filename = new StringCatter(filePath);
 
-    String contents;
+    String contents = "";
     try {
       contents = Files.readString(Path.of(filePath));
-      // Gather error messages from the Oberon0 LSP driver
-      ConsCell messages = PlspDriver.invoke(OriginContext.FFI_CONTEXT, new StringCatter(contents), filename, parserFn);
-      // Report diagnostics
-      client.publishDiagnostics(new PublishDiagnosticsParams(uri.toString(), Util.messagesToDiagnostics(messages, uri.toString()), savedVersions.get(uri.toString())));
     } catch (IOException e) {
       e.printStackTrace();
     }
+    
+    // Gather error messages from the Oberon0 LSP driver
+    // Save decorated modules to provide other language features
+    NPair result = PlspDriver.invoke(OriginContext.FFI_CONTEXT, new StringCatter(contents), filename, parserFn);
+    DecoratedNode decResult = result.decorate();
+    ConsCell messages = decResult.synthesized(silver.core.Init.silver_core_snd__ON__silver_core_Pair);
+    Object module = decResult.synthesized(silver.core.Init.silver_core_fst__ON__silver_core_Pair);
+    savedModules.put(filePath, module);
+
+    // Report diagnostics
+    client.publishDiagnostics(new PublishDiagnosticsParams(uri.toString(), Util.messagesToDiagnostics(messages, uri.toString()), savedVersions.get(uri.toString())));
      
   }
 }
