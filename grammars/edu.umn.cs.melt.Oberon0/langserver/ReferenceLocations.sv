@@ -6,12 +6,14 @@ import edu:umn:cs:melt:Oberon0:core:abstractSyntax;
 import edu:umn:cs:melt:Oberon0:constructs:procedures:abstractSyntax;
 import edu:umn:cs:melt:Oberon0:constructs:dataStructures:abstractSyntax;
 
+-- A list of reference locations, maps some reference location in the file to the
+-- reference's original declaration
 monoid attribute varRefLocs::[(Location, Decl)];
 
 attribute varRefLocs occurs on Module, Decl, Stmt, Expr, Exprs, LExpr;
 propagate varRefLocs on Module, Decl, Stmt, Expr, Exprs, LExpr;
 
-
+-- Given a Decorated Name, extract the location & declaration from that name if it exists 
 function findDclOnName
 [(Location, Decl)] ::= n::Decorated Name 
 {
@@ -34,6 +36,7 @@ aspect varRefLocs on Stmt using <- of
 end;
 
 -- Same as in Silver reference locations...
+-- TODO: Does it make sense to import this function from the Silver reference locations?
 function lookupPos
 [a] ::= line::Integer col::Integer items::[(Location, a)]
 {
@@ -54,6 +57,9 @@ Location ::= p::String l::Location
   return loc(p, l.line, l.column, l.line, l.column, l.index, l.index);
 }
 
+-- Given a location in a file name & a list of declarations, lookup that declaration by the location
+-- of the reference
+-- Return a list of source locations for that declaration
 function lookupDeclLocation
 [Location] ::= fileName::String line::Integer col::Integer decls::[(Location, Decl)]
 {
@@ -62,6 +68,8 @@ function lookupDeclLocation
   );
 }
 
+-- Given a location in a file and the decorated module for that file, extract all
+-- the reference locations in the file and lookup a declaration by the given reference location 
 function findDeclLocation
 [Location] ::= fileName::String line::Integer col::Integer m::Maybe<Decorated Module>
 {

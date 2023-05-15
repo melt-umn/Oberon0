@@ -142,6 +142,7 @@ public class Oberon0LanguageService implements TextDocumentService, WorkspaceSer
     refreshWorkspace();
   }
 
+  // Go-to declaration
   @Override
   public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> declaration(DeclarationParams params) {
     return CompletableFutures.computeAsync((cancelChecker) -> {
@@ -151,11 +152,14 @@ public class Oberon0LanguageService implements TextDocumentService, WorkspaceSer
       } catch (URISyntaxException e) {
           e.printStackTrace();
       }
+      // Checks if we have saved modules for this file
       if (savedModules.get(fileName) == null) {
         System.err.println("No modules saved for " + fileName);
         return Either.forLeft(List.of());
       }
 
+      // Looks up a declaration given its location using the findDeclLocation function implemented
+      // by the language server
       return Either.forLeft(new ConsCellCollection<NLocation>(
           PfindDeclLocation.invoke(OriginContext.FFI_CONTEXT,
           new StringCatter(fileName), 
@@ -206,6 +210,8 @@ public class Oberon0LanguageService implements TextDocumentService, WorkspaceSer
   }
 
   private void refreshWorkspace() {
+      // Refreshes the workspace by rebuilding all Oberon0 files
+
       buildFiles.clear();
 
       for (WorkspaceFolder folder : folders) {
@@ -230,6 +236,7 @@ public class Oberon0LanguageService implements TextDocumentService, WorkspaceSer
   }
 
   private void findObFiles(File root) {
+      // Finds all Oberon0 files in the workspace 
       for (File file : root.listFiles()) {
           if (file.isDirectory()) {
               findObFiles(file);
