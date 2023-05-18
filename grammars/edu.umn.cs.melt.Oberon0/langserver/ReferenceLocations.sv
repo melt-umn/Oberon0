@@ -50,10 +50,14 @@ function lookupPos
 function updateLocPath
 Location ::= p::String l::Location
 {
+  -- Hack
   -- Don't use l.endLine, l.endColumn, etc. because we want to give lsp just the
   -- "top" of the definition, because VSCode seems to "correct" go-to declaration
   -- if the declaration range overlaps the reference (problem w/ recursive methods)
   -- by inferring that the user meant to "find all references" instead
+  -- Ideally we want declaration locations in an environment to indicate the name
+  -- that's being declared rather than the full declaration, but this hack accomplishes
+  -- a similar visual indication for the user w/o changing the Oberon0 environment
   return loc(p, l.line, l.column, l.line, l.column, l.index, l.index);
 }
 
