@@ -47,7 +47,8 @@ export function activate(context: vscode.ExtensionContext) {
 			},
 			initializationOptions: {
 				'compilerJar': config.get('compilerJar'),
-				'parserName': config.get('parserName')
+				'parserName': config.get('parserName'),
+        'initGrammar': config.get('initGrammar')
 			}
 		};
 

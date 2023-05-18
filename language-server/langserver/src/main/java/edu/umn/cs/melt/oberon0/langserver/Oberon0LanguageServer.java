@@ -51,7 +51,7 @@ public class Oberon0LanguageServer implements LanguageServer, LanguageClientAwar
     common.Util.init();
 
     // Get the initialization options
-    String compilerJar = "", parserName = "";
+    String compilerJar = "", parserName = "", initGrammar = "";
     try {
         JsonObject initOptions = (JsonObject)initializeParams.getInitializationOptions();
         if (initOptions != null) {
@@ -61,11 +61,15 @@ public class Oberon0LanguageServer implements LanguageServer, LanguageClientAwar
             if (initOptions.has("parserName")) {
                 parserName = initOptions.get("parserName").getAsString();
             }
+            if (initOptions.has("initGrammar")) {
+                initGrammar = initOptions.get("initGrammar").getAsString();
+            }
         }
     } catch(ClassCastException e) {
         System.err.println("Got unexpected init options: " + initializeParams.getInitializationOptions());
     }
     if (parserName.isEmpty()) {
+        // Default parser
         parserName = "edu:umn:cs:melt:Oberon0:components:L4:parse";
     }
 
@@ -87,10 +91,13 @@ public class Oberon0LanguageServer implements LanguageServer, LanguageClientAwar
     }
 
     // Initialize Oberon0 grammars
-    // Includes parser & driver
-    // TODO: should the init grammar be specifiable?
+    if (initGrammar.isEmpty()){
+      // Default initialization grammar
+      // Must include both parser & driver
+      initGrammar = "edu:umn:cs:melt:Oberon0:artifacts:A5";
+    }
     try {
-        Util.initGrammar("edu:umn:cs:melt:Oberon0:artifacts:A5", loader);
+        Util.initGrammar(initGrammar, loader);
     } catch (SecurityException | ReflectiveOperationException e) {
         client.showMessage(new MessageParams(MessageType.Error, "Error loading compiler jar " + compilerJar + ": " + e.toString()));
     }

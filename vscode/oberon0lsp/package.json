@@ -49,6 +49,11 @@
             "type": "string",
             "default": "edu:umn:cs:melt:Oberon0:components:L4:parse",
             "description": "Full name of the Oberon0 parser to use"
+          },
+          "Oberon0.initGrammar": {
+            "type": "string",
+            "default": "edu:umn:cs:melt:Oberon0:artifacts:A5",
+            "description": "Full name of the Oberon0 grammar to initialize"
           }
         }
       }
