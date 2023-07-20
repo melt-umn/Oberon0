@@ -1,0 +1,3 @@
+#!/bin/bash
+
+rm -f *.jar simple_lifted.ob simple_pp.ob simple.c simple.errors
