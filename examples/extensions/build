@@ -9,7 +9,7 @@ if ! which silver > /dev/null; then
   exit 1
 fi
 
-ARGS="-I ../../grammas/ $@"
+ARGS="-I ../../grammars/ $@"
 
 silver $ARGS -o silver-Oberon0.jar edu:umn:cs:melt:exts:silver:Oberon0:composed:with_Oberon0
 
