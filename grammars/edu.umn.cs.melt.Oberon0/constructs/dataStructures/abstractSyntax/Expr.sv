@@ -15,7 +15,8 @@ e::LExpr ::= rec::LExpr fld::Name
 {
   e.pp = pp:ppConcat([rec.pp, pp:text("."), fld.pp]);
   
-  propagate errors, env;  --T2
+  rec.env = e.env;  --T2
+  propagate errors;  --T2
   e.evalConstInt = nothing();  --T2
 }
 

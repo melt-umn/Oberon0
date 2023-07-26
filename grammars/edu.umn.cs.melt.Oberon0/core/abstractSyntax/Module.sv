@@ -23,7 +23,7 @@ m::Module ::= id::Name ds::Decl ss::Stmt endid::Name
               then [err(endid.location, "Mismatching END statements. Module " ++ id.name ++ " ended with " ++ endid.name)]
               else [];
   
-  production attribute initialGlobalScope :: Decorated Env;
+  production attribute initialGlobalScope :: Env;
   initialGlobalScope = newScope(addDefs(foldr(appendDefs, noDefs(), [
      aprioriTypeDecl("BOOLEAN", booleanTypeExpr(location=aprioriLoc)),
      aprioriTypeDecl("INTEGER", integerTypeExpr(location=aprioriLoc)),

@@ -10,7 +10,7 @@ monoid attribute individualDcls :: [Decorated Decl];  --T2
 {--
  - The brand new, resulting environment, modified from env.
  -}
-synthesized attribute newEnv :: Decorated Env;  --T2
+synthesized attribute newEnv :: Env;  --T2
 {--
  - Information about the variable bindings of a declaration
  -}

@@ -33,61 +33,40 @@ import silver:util:treemap as tm;
   The reason for passing this around decorated is to ensure the environment is
   re-used, and never "reconstructed."
  -}
-nonterminal Env with types, values;
+data nonterminal Env with types, values;
 
-inherited attribute types :: [ tm:Map<String Decorated Decl> ];
-inherited attribute values :: [ tm:Map<String Decorated Decl> ];
-
-{--
- - A dumb container for the unrestricted set of inherited attributes that
- - occurs on 'Env'. No other constructors exist.
- -}
-abstract production envRecord
-e::Env ::=
-{
-}
+synthesized attribute types :: [ tm:Map<String Decorated Decl> ];
+synthesized attribute values :: [ tm:Map<String Decorated Decl> ];
 
 {--
  - An empty environment.
  -}
-function emptyEnv
-Decorated Env ::=
+production emptyEnv
+e::Env ::=
 {
-  -- By constructing the decorated value using a production attribute
-  -- extension are able to add equations for new inherited attributes
-  -- using 'aspect function'.
-  production attribute e::Env;
-  e = envRecord();
   e.types = [tm:empty()];
   e.values = [tm:empty()];
-  return e;
 }
 
 {--
  - Put (empty) new scopes at the beginning of every namespace.
  -}
-function newScope
-Decorated Env ::= e1::Decorated Env
+production newScope
+e::Env ::= e1::Env
 {
-  production attribute e::Env;
-  e = envRecord();
   e.types = [tm:empty()] ++ e1.types;
   e.values = [tm:empty()] ++ e1.values;
-  return e;
 }
 
 {--
  - Take a set of definitions, and introduce them to the environment
  - in the current scope.
  -}
-function addDefs
-Decorated Env ::= d::Defs  e1::Decorated Env
+production addDefs
+e::Env ::= d::Defs  e1::Env
 {
-  production attribute e::Env;
-  e = envRecord();
   e.types = tm:add(d.typeDefs,head(e1.types)) :: tail(e1.types);
   e.values = tm:add(d.valueDefs,head(e1.values)) :: tail(e1.values);
-  return e;
 }
 
 --------------------------------------------------------------------------------
@@ -164,7 +143,7 @@ e::Defs ::= s::String  d::Decorated Decl
  -}
 
 function lookupDecl
-Maybe<Decorated Decl> ::= s::String e::Decorated Env
+Maybe<Decorated Decl> ::= s::String e::Env
 {
   return lookupValue(s,e) ;
 }
@@ -197,7 +176,7 @@ function lookupInScopes
  - Looks up a type in the nearest scope containing it.
  -}
 function lookupType
-Maybe<Decorated Decl> ::= s::String e::Decorated Env
+Maybe<Decorated Decl> ::= s::String e::Env
 {
   return foldr(orElse, nothing(), lookupInScopes(s, e.types));
 }
@@ -206,7 +185,7 @@ Maybe<Decorated Decl> ::= s::String e::Decorated Env
  - Looks up a value in the nearest scope containing it.
  -}
 function lookupValue
-Maybe<Decorated Decl> ::= s::String e::Decorated Env
+Maybe<Decorated Decl> ::= s::String e::Env
 {
   return foldr(orElse, nothing(), lookupInScopes(s, e.values));
 }
@@ -215,7 +194,7 @@ Maybe<Decorated Decl> ::= s::String e::Decorated Env
  - Looks up a type in the most-local scope ONLY.
  -}
 function lookupTypeInScope
-Maybe<Decorated Decl> ::= s::String e::Decorated Env
+Maybe<Decorated Decl> ::= s::String e::Env
 {
   return head(lookupInScopes(s,e.types));
 }
@@ -224,7 +203,7 @@ Maybe<Decorated Decl> ::= s::String e::Decorated Env
  - Looks up a value in the most-local scope ONLY.
  -}
 function lookupValueInScope
-Maybe<Decorated Decl> ::= s::String e::Decorated Env
+Maybe<Decorated Decl> ::= s::String e::Env
 {
   return head(lookupInScopes(s,e.values));
 }

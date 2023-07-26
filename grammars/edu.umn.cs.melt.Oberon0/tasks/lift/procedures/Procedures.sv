@@ -80,7 +80,7 @@ Decl ::= toAdd::[Decorated Decl] prev::Decl
 
 -- Support functions --
 function getVarDecls 
-[Decorated Decl] ::= en::Decorated Env
+[Decorated Decl] ::= en::Env
 {
   return filter(isVarDecl, map(getDecl, bindings));
 
@@ -89,7 +89,7 @@ function getVarDecls
 }
 
 function getProcDecls 
-[Decorated Decl] ::= en::Decorated Env
+[Decorated Decl] ::= en::Env
 {
   return filter(isProcDecl, map(getDecl, bindings));
 
