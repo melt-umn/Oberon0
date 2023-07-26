@@ -23,7 +23,7 @@ d::Decl ::= id::Name t::TypeExpr
   --T2-start
    d.passedByValue = true;
    d.individualDcls := [d];
-   d.vars := [pair(id.name, d)];
+   d.vars := [(id.name, d)];
    d.newEnv = addDefs(valueDef(id.name, d), d.env);
    propagate env;
   --T2-end
@@ -38,7 +38,7 @@ d::Decl ::= id::Name t::TypeExpr
   --T2-start
    d.passedByValue = false;
    d.individualDcls := [d];
-   d.vars := [pair(id.name, d)];
+   d.vars := [(id.name, d)];
    d.newEnv = addDefs(valueDef(id.name, d), d.env);
    propagate env;
   --T2-end

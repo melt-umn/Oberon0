@@ -122,7 +122,7 @@ e::Defs ::= d1::Defs  d2::Defs
 abstract production valueDef
 e::Defs ::= s::String  d::Decorated Decl
 {
-  e.valueDefs = [pair(s, d)];
+  e.valueDefs = [(s, d)];
   forwards to noDefs();
 }
 
@@ -132,7 +132,7 @@ e::Defs ::= s::String  d::Decorated Decl
 abstract production typeDef
 e::Defs ::= s::String  d::Decorated Decl
 {
-  e.typeDefs = [pair(s, d)];
+  e.typeDefs = [(s, d)];
   forwards to noDefs();
 }
 

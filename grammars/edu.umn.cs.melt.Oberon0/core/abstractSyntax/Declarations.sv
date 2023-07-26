@@ -121,7 +121,7 @@ d::Decl ::= id::Name t::TypeExpr
 
   --T2-start
   d.individualDcls := [d];
-  d.vars <- [pair(id.name, d)];
+  d.vars <- [(id.name, d)];
   
   d.newEnv = addDefs(valueDef(id.name, d), d.env);
 

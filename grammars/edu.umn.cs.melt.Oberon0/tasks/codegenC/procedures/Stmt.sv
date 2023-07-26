@@ -22,7 +22,7 @@ es::Exprs ::= e::Expr rest::Exprs
 {
   es.cTrans = let here :: String = 
                     case es.paramsKnown of
-                    | just(pair(_,h)::_) -> if h.passedByValue then e.cTrans else "&(" ++ e.cTrans ++ ")"
+                    | just((_,h)::_) -> if h.passedByValue then e.cTrans else "&(" ++ e.cTrans ++ ")"
                     end,
                   next :: String = 
                     case rest of 

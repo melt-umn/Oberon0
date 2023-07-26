@@ -38,7 +38,7 @@ d::Decl ::= id::Name formals::Decl locals::Decl s::Stmt endid::Name
   --T2-start  
   d.individualDcls := [d];
   propagate vars;
-  d.funs <- [pair(id.name, d)];
+  d.funs <- [(id.name, d)];
   
   -- Create a scope upon entry to the function, add formals, then do into locals.
   formals.env = newScope(d.env);

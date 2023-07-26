@@ -84,13 +84,13 @@ aspect production readCall
 s::Stmt ::= f::Name e::Exprs
 {
   e.procName = f;
-  e.paramsKnown = just([pair("zzz", decorate paramDeclReference(name("zzz", location=s.location), integerTypeExpr(location=s.location), location=s.location) with {env=s.env;})]);
+  e.paramsKnown = just([("zzz", decorate paramDeclReference(name("zzz", location=s.location), integerTypeExpr(location=s.location), location=s.location) with {env=s.env;})]);
 }
 aspect production writeCall
 s::Stmt ::= f::Name e::Exprs
 {
   e.procName = f;
-  e.paramsKnown = just([pair("zzz", decorate paramDeclValue(name("zzz", location=s.location), integerTypeExpr(location=s.location), location=s.location) with {env=s.env;})]);
+  e.paramsKnown = just([("zzz", decorate paramDeclValue(name("zzz", location=s.location), integerTypeExpr(location=s.location), location=s.location) with {env=s.env;})]);
 }
 aspect production writeLnCall
 s::Stmt ::= f::Name e::Exprs
