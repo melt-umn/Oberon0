@@ -1,4 +1,4 @@
-grammar artifact;
+grammar oberon0TableExtension;
 
 import edu:umn:cs:melt:Oberon0:components:T3;
 import edu:umn:cs:melt:Oberon0:components:T5;
