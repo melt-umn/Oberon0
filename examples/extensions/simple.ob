@@ -1,6 +1,7 @@
 MODULE Simple;
 
 VAR b1, b2, b3, c1, c2: BOOLEAN;
+d1, d2: INTEGER;
 
 (* condition table example *)
 BEGIN
@@ -9,17 +10,20 @@ BEGIN
   b3 := TRUE;
 
   (* condition table *)
-
   c1 := TABLE { b1 & b3  : T F
-                ~ b2     : T *
+                ~b2      : T *
                 b2 OR b3 : F T };
+
+  IF c1 THEN d1 := 1 ELSE d1 := 0 END; 
 
   (*This table is equivalent to this less intuitive expression. *)
 
   c2 := ((b1 & b3) & ((~ b2) & (~(b2 OR b3)))) OR 
              ((~(b1 & b3)) & (TRUE & (b2 OR b3)));
+  
+  IF c2 THEN d2 := 1 ELSE d2 := 0 END; 
 
-  IF c2
+  IF d1 = d2
   THEN
     Write(1); WriteLn
   ELSE
