@@ -1,6 +1,9 @@
 grammar edu:umn:cs:melt:exts:Oberon0:tables:abstractSyntax;
 
 imports edu:umn:cs:melt:Oberon0:core:abstractSyntax as abs;
+imports edu:umn:cs:melt:Oberon0:core:typeChecking;
+imports edu:umn:cs:melt:Oberon0:tasks:lift:core;
+imports edu:umn:cs:melt:Oberon0:tasks:codegenC:core;
 
 imports silver:langutil;
 imports silver:langutil:pp;
@@ -8,22 +11,25 @@ imports silver:langutil:pp;
 abstract production table
 top::abs:Expr ::= trows::TableRows
 {
-  top.pp = ppConcat( [text("table ("), line(), trows.pp, text(" )")] );
-  propagate abs:env;
+  top.pp = ppConcat( [text("table {"), line(), trows.pp, text(" }")] );
+
+  top.type = booleanType();
+
+  top.lifted = table(trows.lifted, location=trows.location);
+  top.cTrans = "table {" ++ trows.cTrans ++ "}";
+  
+  propagate abs:env, errors;
 
 }
 
 -- Table Rows --
 ----------------
 nonterminal TableRows with pp, errors, abs:env, location,
-  ftExprss, rlen, preDecls;
--- TODO: The ableC TableRows also have an attribute from ableC "controlStmtContext"
--- I'm unsure yet if this is needed or how to represent this in Oberon0
-
--- TODO: How we are using Stmt + Expr
-synthesized attribute preDecls :: [abs:Stmt];
-synthesized attribute ftExprss :: [[abs:Expr]];
+   rlen, cTrans;
+propagate abs:env on TableRows;
 synthesized attribute rlen :: Integer;
+
+attribute lifted<TableRows> occurs on TableRows;
 
 abstract production tableRowSnoc
 top::TableRows ::= trowstail::TableRows  trow::TableRow
@@ -38,9 +44,9 @@ top::TableRows ::= trowstail::TableRows  trow::TableRow
         "as the preceding rows")];
 
   top.rlen = trow.rlen;
-  top.ftExprss = trowstail.ftExprss ++ [trow.ftExprs];
-  top.preDecls = trowstail.preDecls ++ trow.preDecls;
 
+  top.lifted = tableRowSnoc(trowstail.lifted, trow.lifted, location=top.location);
+  top.cTrans = trowstail.cTrans ++ "\n" ++ trow.cTrans;
 }
 
 abstract production tableRowOne
@@ -49,75 +55,86 @@ top::TableRows ::= trow::TableRow
   top.pp = trow.pp;
   top.errors := trow.errors;
   top.rlen = trow.rlen;
-  top.ftExprss = [trow.ftExprs];
-  top.preDecls = trow.preDecls;
+
+  top.lifted = tableRowOne(trow.lifted, location=top.location);
+
+  top.cTrans = trow.cTrans;
 }
 
 -- Table Row --
 ---------------
 nonterminal TableRow with pp, errors, abs:env, location,
-  ftExprs, rlen, preDecls;
+  rlen, cTrans;
+propagate abs:env on TableRow;
 
-synthesized attribute ftExprs :: [abs:Expr];
+attribute lifted<TableRow> occurs on TableRow;
 
 abstract production tableRow
 top::TableRow ::= e::abs:Expr tvl::TruthFlagList
 {
-
   top.pp = ppConcat([e.pp, text(" : "), tvl.pp]);
   top.errors := e.errors;
+  top.errors <- checkErrors (e.type, booleanType(), "Condition expression", e.location);
+  
   top.rlen = tvl.rlen;
-  top.ftExprs = tvl.ftExprs;
 
-  --top.errors <- checkErrors (e.type, booleanType(), "Condition expression", e.location);
-
-
-  -- TODO
-
+  top.lifted = tableRow(e.lifted, tvl.lifted, location=top.location);
+  top.cTrans = e.cTrans ++ " : " ++ tvl.cTrans;
 }
 
 -- Truth Value List --
 ----------------------
-nonterminal TruthFlagList with pp, rowExpr, ftExprs, rlen;
-
-inherited attribute rowExpr :: abs:Expr;
--- the expression in the table row.  It is passed down to the TF*
--- values to be used in the translation to the host language.
+nonterminal TruthFlagList with pp, rlen, cTrans;
+attribute lifted<TruthFlagList> occurs on TruthFlagList;
 
 abstract production tvlistCons
 top::TruthFlagList ::= tv::TruthFlag tvltail::TruthFlagList
 {
-  --TODO
+  top.pp = ppConcat([tv.pp, text(" "), tvltail.pp]);
+  top.rlen = 1 + tvltail.rlen;
+  top.lifted = tvlistCons(tv.lifted, tvltail.lifted);
+
+  top.cTrans = tv.cTrans ++ " " ++ tvltail.cTrans;
 }
 
 abstract production tvlistOne
 top::TruthFlagList ::= tv::TruthFlag
 {
-  -- TODO
+  top.pp = tv.pp;
+  top.rlen = 1;
+  top.lifted = tvlistOne(tv.lifted);
+
+  top.cTrans = tv.cTrans;
 }
 
 -- Truth Values
 ---------------
-nonterminal TruthFlag with pp, rowExpr, ftExpr;
-synthesized attribute ftExpr :: abs:Expr;
+nonterminal TruthFlag with pp, cTrans;
+attribute lifted<TruthFlag> occurs on TruthFlag;
 
 abstract production tvTrue
 top::TruthFlag ::=
 {
-  --TODO
-  --top.pp = text("T");
-  --top.ftExpr = top.rowExpr;
+  top.pp = text("T");
+  top.lifted = top;
+
+  top.cTrans = "T";
 }
 
 abstract production tvFalse
 top::TruthFlag ::=
 {
-  --TODO
-  --top.pp = text("F");
+  top.pp = text("F");
+  top.lifted = top;
+
+  top.cTrans = "F";
 }
 
 abstract production tvStar
 top::TruthFlag ::=
 {
-  -- TODO
+  top.pp = text("*");
+  top.lifted = top;
+
+  top.cTrans = "*";
 }
