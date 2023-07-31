@@ -8,6 +8,10 @@ imports edu:umn:cs:melt:Oberon0:tasks:codegenC:core;
 imports silver:langutil;
 imports silver:langutil:pp;
 
+-- For LSP
+imports silver:langutil:lsp;
+imports edu:umn:cs:melt:Oberon0:langserver;
+
 abstract production table
 top::abs:Expr ::= trows::TableRows
 {
@@ -17,6 +21,8 @@ top::abs:Expr ::= trows::TableRows
 
   top.lifted = table(trows.lifted, location=trows.location);
   top.cTrans = "table {" ++ trows.cTrans ++ "}";
+
+  top.varRefLocs := trows.varRefLocs;
   
   propagate abs:env, errors;
 
@@ -25,7 +31,7 @@ top::abs:Expr ::= trows::TableRows
 -- Table Rows --
 ----------------
 nonterminal TableRows with pp, errors, abs:env, location,
-   rlen, cTrans;
+   rlen, cTrans, varRefLocs;
 propagate abs:env on TableRows;
 synthesized attribute rlen :: Integer;
 
@@ -47,6 +53,8 @@ top::TableRows ::= trowstail::TableRows  trow::TableRow
 
   top.lifted = tableRowSnoc(trowstail.lifted, trow.lifted, location=top.location);
   top.cTrans = trowstail.cTrans ++ "\n" ++ trow.cTrans;
+
+  top.varRefLocs := trowstail.varRefLocs ++ trow.varRefLocs;
 }
 
 abstract production tableRowOne
@@ -59,12 +67,15 @@ top::TableRows ::= trow::TableRow
   top.lifted = tableRowOne(trow.lifted, location=top.location);
 
   top.cTrans = trow.cTrans;
+
+  top.varRefLocs := trow.varRefLocs;
+
 }
 
 -- Table Row --
 ---------------
 nonterminal TableRow with pp, errors, abs:env, location,
-  rlen, cTrans;
+  rlen, cTrans, varRefLocs;
 propagate abs:env on TableRow;
 
 attribute lifted<TableRow> occurs on TableRow;
@@ -80,6 +91,8 @@ top::TableRow ::= e::abs:Expr tvl::TruthFlagList
 
   top.lifted = tableRow(e.lifted, tvl.lifted, location=top.location);
   top.cTrans = e.cTrans ++ " : " ++ tvl.cTrans;
+
+  top.varRefLocs := e.varRefLocs;
 }
 
 -- Truth Value List --
