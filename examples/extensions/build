@@ -11,6 +11,6 @@ fi
 
 ARGS="-I ../../grammars/ $@"
 
-silver $ARGS -o silver-Oberon0.jar edu:umn:cs:melt:exts:silver:Oberon0:composed:with_Oberon0
+silver $ARGS -o ../../silver-Oberon0.jar edu:umn:cs:melt:exts:silver:Oberon0:composed:with_Oberon0
 
-silver-custom silver-Oberon0.jar $ARGS -o oberon0_extended.jar artifact
+silver-custom ../../silver-Oberon0.jar $ARGS -o ../../oberon0_extended.jar oberon0TableExtension

@@ -5,7 +5,7 @@
 
 # Edit path to where Oberon0 jars are kept
 
-PathToJar="./"
+PathToJar="../../"
 
 # Specify which artifact jar you would like to use, e.g. oberon0_a5.jar
 
