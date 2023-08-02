@@ -19,23 +19,20 @@ top::abs:Expr ::= trows::TableRows
 
   top.type = booleanType();
 
-  top.lifted = table(trows.lifted, location=trows.location);
-  top.cTrans = "table {" ++ trows.cTrans ++ "}";
-
   top.varRefLocs := trows.varRefLocs;
   
   propagate abs:env, errors;
+
+  --forwards to 
 
 }
 
 -- Table Rows --
 ----------------
 nonterminal TableRows with pp, errors, abs:env, location,
-   rlen, cTrans, varRefLocs;
+   rlen, varRefLocs;
 propagate abs:env on TableRows;
 synthesized attribute rlen :: Integer;
-
-attribute lifted<TableRows> occurs on TableRows;
 
 abstract production tableRowSnoc
 top::TableRows ::= trowstail::TableRows  trow::TableRow
@@ -51,9 +48,6 @@ top::TableRows ::= trowstail::TableRows  trow::TableRow
 
   top.rlen = trow.rlen;
 
-  top.lifted = tableRowSnoc(trowstail.lifted, trow.lifted, location=top.location);
-  top.cTrans = trowstail.cTrans ++ "\n" ++ trow.cTrans;
-
   top.varRefLocs := trowstail.varRefLocs ++ trow.varRefLocs;
 }
 
@@ -64,10 +58,6 @@ top::TableRows ::= trow::TableRow
   top.errors := trow.errors;
   top.rlen = trow.rlen;
 
-  top.lifted = tableRowOne(trow.lifted, location=top.location);
-
-  top.cTrans = trow.cTrans;
-
   top.varRefLocs := trow.varRefLocs;
 
 }
@@ -75,10 +65,8 @@ top::TableRows ::= trow::TableRow
 -- Table Row --
 ---------------
 nonterminal TableRow with pp, errors, abs:env, location,
-  rlen, cTrans, varRefLocs;
+  rlen, varRefLocs;
 propagate abs:env on TableRow;
-
-attribute lifted<TableRow> occurs on TableRow;
 
 abstract production tableRow
 top::TableRow ::= e::abs:Expr tvl::TruthFlagList
@@ -89,25 +77,19 @@ top::TableRow ::= e::abs:Expr tvl::TruthFlagList
   
   top.rlen = tvl.rlen;
 
-  top.lifted = tableRow(e.lifted, tvl.lifted, location=top.location);
-  top.cTrans = e.cTrans ++ " : " ++ tvl.cTrans;
-
   top.varRefLocs := e.varRefLocs;
 }
 
 -- Truth Value List --
 ----------------------
-nonterminal TruthFlagList with pp, rlen, cTrans;
-attribute lifted<TruthFlagList> occurs on TruthFlagList;
+nonterminal TruthFlagList with pp, rlen, ftExprs;
+synthesized attribute ftExprs :: [String];
 
 abstract production tvlistCons
 top::TruthFlagList ::= tv::TruthFlag tvltail::TruthFlagList
 {
   top.pp = ppConcat([tv.pp, text(" "), tvltail.pp]);
   top.rlen = 1 + tvltail.rlen;
-  top.lifted = tvlistCons(tv.lifted, tvltail.lifted);
-
-  top.cTrans = tv.cTrans ++ " " ++ tvltail.cTrans;
 }
 
 abstract production tvlistOne
@@ -115,39 +97,82 @@ top::TruthFlagList ::= tv::TruthFlag
 {
   top.pp = tv.pp;
   top.rlen = 1;
-  top.lifted = tvlistOne(tv.lifted);
-
-  top.cTrans = tv.cTrans;
 }
 
 -- Truth Values
 ---------------
-nonterminal TruthFlag with pp, cTrans;
-attribute lifted<TruthFlag> occurs on TruthFlag;
+nonterminal TruthFlag with pp, ftExpr;
+synthesized attribute ftExpr :: String;
 
 abstract production tvTrue
 top::TruthFlag ::=
 {
   top.pp = text("T");
-  top.lifted = top;
 
-  top.cTrans = "T";
+  top.ftExpr = "TRUE";
+
 }
 
 abstract production tvFalse
 top::TruthFlag ::=
 {
   top.pp = text("F");
-  top.lifted = top;
-
-  top.cTrans = "F";
+  -- top.ftExpr = 
 }
 
 abstract production tvStar
 top::TruthFlag ::=
 {
   top.pp = text("*");
-  top.lifted = top;
+  top.ftExpr = "TRUE"; 
+}
 
-  top.cTrans = "*";
+-- Our AST construction helper functions
+
+function logicalNegate
+abs:Expr ::= ne::abs:Expr
+{
+  return abs:notOp(ne, location=ne.location);
+}
+
+function logicalOr
+abs:Expr ::= e1::abs:Expr e2::abs:Expr
+{
+  return abs:orOp(e1, e2, location=e1.location);
+}
+function logicalAnd
+abs:Expr ::= e1::abs:Expr e2::abs:Expr
+{
+  return abs:andOp(e1, e2, location=e1.location);
+}
+
+-- table helper functions
+-------------------------
+function disjunction
+abs:Expr ::= es::[abs:Expr]
+{
+  return if length(es) == 1 then head(es)
+         else logicalOr(head(es), disjunction(tail(es)));
+}
+function mapConjunction
+[abs:Expr] ::= ess::[[abs:Expr]]
+{
+  return if null(ess) then [] 
+         else cons(conjunction(head(ess)),
+                     mapConjunction(tail(ess)));
+}
+function conjunction
+abs:Expr ::= es::[abs:Expr]
+{
+  return if length(es) == 1 then head(es)
+         else logicalAnd(head(es), conjunction(tail(es)));
+}
+function transpose
+[[a]] ::= m::[[a]]
+{
+  return
+    case m of
+    | [] :: _ -> []
+    | _       -> map(head,m) :: transpose(map(tail,m))
+    end;
 }
