@@ -77,17 +77,17 @@ top::TruthValueList_c ::= tv::TruthValue_c
 concrete production tvTrue_c
 top::TruthValue_c ::= truetv::TrueTV_t
 {
-  top.ast = tvTrue();
+  top.ast = tvTrue(location=top.location);
 }
 
 concrete production tvFalse_c
 top::TruthValue_c ::= falsetv::FalseTV_t
 {
-  top.ast = tvFalse();
+  top.ast = tvFalse(location=top.location);
 }
 
 concrete production tvStar_c
 top::TruthValue_c ::= startv::StarTV_t
 {
-  top.ast = tvStar();
+  top.ast = tvStar(location=top.location);
 }
