@@ -17,6 +17,9 @@ terminal TrueTV_t   'T';
 terminal FalseTV_t  'F';
 terminal StarTV_t   '*';
 
+terminal True_t 'TRUE' lexer classes { cnc:KEYWORD };
+terminal False_t 'FALSE' lexer classes { cnc:KEYWORD };
+
 ignore terminal Spaces_t /[\t ]+/;
 
 disambiguate NewLine_t, cnc:WhiteSpace
@@ -27,6 +30,11 @@ disambiguate NewLine_t, cnc:WhiteSpace
 disambiguate Spaces_t, cnc:WhiteSpace
 {
   pluck Spaces_t;
+}
+
+disambiguate True_t, cnc:Id_t
+{
+  pluck True_t;
 }
 
 -- Nonterminals
@@ -90,4 +98,16 @@ concrete production tvStar_c
 top::TruthValue_c ::= startv::StarTV_t
 {
   top.ast = tvStar(location=top.location);
+}
+
+concrete production trueVal_c
+top::cnc:Expr_c ::= t::True_t
+{
+  top.ast = trueVal(location=t.location);
+}
+
+concrete production falseVal_c
+top::cnc:Expr_c ::= f::False_t
+{
+  top.ast = falseVal(location=f.location);
 }

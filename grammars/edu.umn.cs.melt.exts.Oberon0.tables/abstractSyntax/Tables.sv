@@ -143,10 +143,33 @@ abstract production tvStar
 top::TruthFlag ::=
 {
   top.pp = text("*");
-  -- TODO: Thinking I'll need to make a var decl assigned to TRUE so that I can then use it
-  -- as *? Not 100% sure how to access a constant "true" value. Still thinking on this but below is
-  -- a hack for now.
-  top.ftExpr = abs:eqOp(abs:number("1",location=top.location), abs:number("1",location=top.location), location=top.location);
+  top.ftExpr = trueVal(location=top.location);
+}
+
+abstract production trueVal
+top::abs:Expr ::=
+{
+  top.pp = text("TRUE");
+  top.type = booleanType();
+  
+  top.lifted = top;
+
+  top.cTrans = "1";
+  propagate abs:env, errors;
+
+}
+
+abstract production falseVal
+top::abs:Expr ::=
+{
+  top.pp = text("FALSE");
+  top.type = booleanType();
+  
+  top.lifted = top;
+
+  top.cTrans = "0";
+  propagate abs:env, errors;
+
 }
 
 -- Our AST construction helper functions
