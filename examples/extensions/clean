@@ -1,3 +1,5 @@
 #!/bin/bash
 
-rm -f *.jar simple_lifted.ob simple_pp.ob simple.c simple.errors
+rm -f *.jar 
+rm -f simple_lifted.ob simple_pp.ob simple.c simple.errors
+rm -f altitude_switch_lifted.ob altitude_switch_pp.ob altitude_switch.c altitude_switch.errors
