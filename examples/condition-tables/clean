@@ -3,3 +3,5 @@
 rm -f *.jar
 rm -f ./positive/simple_lifted.ob ./positive/simple_pp.ob ./positive/simple.c ./positive/simple.errors
 rm -f ./positive/altitude_switch_lifted.ob ./positive/altitude_switch_pp.ob ./positive/altitude_switch.c ./positive/altitude_switch.errors
+rm -f ./negative/mismatched_rows_pp.ob ./negative/mismatched_rows.errors
+rm -f ./negative/type_error_pp.ob ./negative/type_error.errors
