@@ -15,8 +15,7 @@ imports edu:umn:cs:melt:Oberon0:langserver;
 abstract production table
 top::abs:Expr ::= trows::TableRows
 {
-  top.pp = ppConcat( [text("table {"), line(), trows.pp, text(" }")] );
-
+  top.pp = ppConcat( [text("TABLE {"), trows.pp, text(" }")] );
   top.type = booleanType();
 
   top.varRefLocs := trows.varRefLocs;
@@ -80,7 +79,7 @@ top::TableRow ::= e::abs:Expr tvl::TruthFlagList
   top.pp = ppConcat([e.pp, text(" : "), tvl.pp]);
   top.errors := e.errors;
   top.errors <- checkErrors (e.type, booleanType(), "Condition expression", e.location);
-  
+ 
   top.rlen = tvl.rlen;
   top.ftExprs = tvl.ftExprs;
 
@@ -153,6 +152,7 @@ top::abs:Expr ::=
   top.type = booleanType();
   
   top.lifted = top;
+  top.freevars = [];
 
   top.cTrans = "1";
   propagate abs:env, errors;
@@ -165,6 +165,7 @@ top::abs:Expr ::=
   top.pp = text("FALSE");
   top.type = booleanType();
   
+  top.freevars = [];
   top.lifted = top;
 
   top.cTrans = "0";
