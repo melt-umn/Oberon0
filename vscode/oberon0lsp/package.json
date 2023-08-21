@@ -1,0 +1,91 @@
+{
+  "name": "oberon0lsp",
+  "displayName": "Oberon0 LSP",
+  "description": "Plugin for Oberon0 Language Server Protocol support",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.67.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/melt-umn/Oberon0.git"
+  },
+  "publisher": "MELT",
+  "categories": [
+    "Programming Languages"
+  ],
+  "tags": [
+    "extensible language"
+  ],
+  "license": "LGPL-3.0-or-later",
+  "activationEvents": [
+    "onLanguage:Oberon0"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "Oberon0",
+        "aliases": [
+          "Oberon0",
+          "ob"
+        ],
+        "extensions": [
+          ".ob"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "configuration": [
+      {
+        "title": "Oberon0",
+        "properties": {
+          "Oberon0.compilerJar": {
+            "type": "string",
+            "default": "oberon0_a5.jar",
+            "description": "Path to the jar containing an alternate version of the oberon0 driver. This can be a relative path from the first workspace folder."
+          },
+          "Oberon0.parserName": {
+            "type": "string",
+            "default": "edu:umn:cs:melt:Oberon0:components:L4:parse",
+            "description": "Full name of the Oberon0 parser to use"
+          },
+          "Oberon0.initGrammar": {
+            "type": "string",
+            "default": "edu:umn:cs:melt:Oberon0:artifacts:A5",
+            "description": "Full name of the Oberon0 grammar to initialize"
+          }
+        }
+      }
+    ]
+  },
+  "configurationDefaults": {
+    "Oberon0": {
+      "editor.semanticHighlighting.enabled": true
+    }
+  },
+  "dependencies": {
+    "vscode-languageclient": "8.0.1"
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/glob": "^7.2.0",
+    "@types/mocha": "^9.1.1",
+    "@types/node": "14.x",
+    "@types/vscode": "^1.67.0",
+    "@typescript-eslint/eslint-plugin": "^5.21.0",
+    "@typescript-eslint/parser": "^5.21.0",
+    "@vscode/test-electron": "^2.1.3",
+    "eslint": "^8.14.0",
+    "glob": "^8.0.1",
+    "mocha": "^9.2.2",
+    "typescript": "^4.6.4"
+  }
+}
