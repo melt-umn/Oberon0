@@ -44,8 +44,8 @@ public class Oberon0LanguageServer implements LanguageServer, LanguageClientAwar
   }
 
   @Override
-	public CompletableFuture<InitializeResult> initialize(InitializeParams initializeParams) {
-		System.err.println("Initializing Oberon0 language server");
+  public CompletableFuture<InitializeResult> initialize(InitializeParams initializeParams) {
+    System.err.println("Initializing Oberon0 language server");
 
     // Initialize the runtime
     common.Util.init();
@@ -143,30 +143,30 @@ public class Oberon0LanguageServer implements LanguageServer, LanguageClientAwar
     final InitializeResult initializeResult = new InitializeResult(capabilities);
     return CompletableFuture.supplyAsync(()->initializeResult);
 
-	}
+  }
 
-	@Override
-	public CompletableFuture<Object> shutdown() {
+  @Override
+  public CompletableFuture<Object> shutdown() {
     // If shutdown request comes from client, set the error code to 0.
     errorCode = 0;
     return null;	
   }
 
-	@Override
-	public void exit() {
+  @Override
+  public void exit() {
     // Kill the LS on exit request from client.
     System.exit(errorCode);
-	}
+  }
 
-	@Override
-	public TextDocumentService getTextDocumentService() {
-		return this.service;
-	}
+  @Override
+  public TextDocumentService getTextDocumentService() {
+    return this.service;
+  }
 
-	@Override
-	public WorkspaceService getWorkspaceService() {
-		return this.service;
-	}
+  @Override
+  public WorkspaceService getWorkspaceService() {
+    return this.service;
+  }
 
   @Override
   public void connect(LanguageClient languageClient) {

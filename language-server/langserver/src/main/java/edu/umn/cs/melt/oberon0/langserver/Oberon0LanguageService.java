@@ -77,37 +77,37 @@ public class Oberon0LanguageService implements TextDocumentService, WorkspaceSer
       refreshWorkspace();
   }
 
-	@Override
-	public void didOpen(DidOpenTextDocumentParams params) {
+  @Override
+  public void didOpen(DidOpenTextDocumentParams params) {
     //System.err.println("Opened " + params);
     String uri = params.getTextDocument().getUri();
     fileContents.put(uri, params.getTextDocument().getText());
     fileVersions.put(uri, params.getTextDocument().getVersion());
     savedVersions.put(uri, params.getTextDocument().getVersion());
     doBuild(URI.create(uri));
-	}
+  }
 
-	@Override
-	public void didChange(DidChangeTextDocumentParams params) {
+  @Override
+  public void didChange(DidChangeTextDocumentParams params) {
     //System.err.println("Changed " + params);
     String uri = params.getTextDocument().getUri();
     for (TextDocumentContentChangeEvent change : params.getContentChanges()) {
         fileContents.put(uri, change.getText());
         fileVersions.put(uri, params.getTextDocument().getVersion());
     }
-	}
+  }
 
-	@Override
-	public void didClose(DidCloseTextDocumentParams params) {
+  @Override
+  public void didClose(DidCloseTextDocumentParams params) {
     //System.err.println("Closed " + params);
     String uri = params.getTextDocument().getUri();
     fileContents.remove(uri);
     fileVersions.remove(uri);
     savedVersions.remove(uri);
-	}
+  }
 
-	@Override
-	public void didSave(DidSaveTextDocumentParams params) {
+  @Override
+  public void didSave(DidSaveTextDocumentParams params) {
     //System.err.println("Saved " + params);
     String uri = params.getTextDocument().getUri();
     if (!fileVersions.containsKey(uri)) {
@@ -115,7 +115,7 @@ public class Oberon0LanguageService implements TextDocumentService, WorkspaceSer
     }
     savedVersions.put(uri, fileVersions.get(uri));
     doBuild(URI.create(uri));
-	}
+  }
 
   @Override
   public void didChangeConfiguration(DidChangeConfigurationParams params) {
