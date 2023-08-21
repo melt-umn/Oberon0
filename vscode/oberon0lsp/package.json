@@ -43,7 +43,7 @@
           "Oberon0.compilerJar": {
             "type": "string",
             "default": "oberon0_a5.jar",
-            "description": "Path to the jar containing an alternate version of the silver-oberon0 compiler. This can be a relative path from the first workspace folder."
+            "description": "Path to the jar containing an alternate version of the oberon0 driver. This can be a relative path from the first workspace folder."
           },
           "Oberon0.parserName": {
             "type": "string",
