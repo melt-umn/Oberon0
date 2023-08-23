@@ -155,6 +155,8 @@ top::abs:Expr ::=
   top.freevars = [];
 
   top.cTrans = "1";
+  
+  top.varRefLocs := [];
   propagate abs:env, errors;
 
 }
@@ -169,6 +171,8 @@ top::abs:Expr ::=
   top.lifted = top;
 
   top.cTrans = "0";
+  
+  top.varRefLocs := [];
   propagate abs:env, errors;
 
 }
