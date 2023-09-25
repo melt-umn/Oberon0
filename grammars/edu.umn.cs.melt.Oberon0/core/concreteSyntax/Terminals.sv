@@ -1,35 +1,37 @@
 grammar edu:umn:cs:melt:Oberon0:core:concreteSyntax;
 
+imports silver:langutil:lsp as lsp;
+
 lexer class IDENTIFIER;
-lexer class KEYWORD dominates IDENTIFIER;
+lexer class KEYWORD dominates IDENTIFIER, extends {lsp:Keyword};
+lexer class OP extends {lsp:Operator};
 
 ignore terminal WhiteSpace /[\r\n\t ]+/;
 
-{-
+{--
   /\(\*              -- Opening lparen-star
      ([^\*]+|        -- Anything not including a star
       (\*+[^\*\)]))* -- stars, followed by non-rparen
      \*+\)/          -- Closing stars-rparen
--}
-ignore terminal Comment /\(\*([^*]+|(\*+[^*)]))*\*+\)/;
+--}
+ignore terminal Comment /\(\*([^*]+|(\*+[^*)]))*\*+\)/ lexer classes {lsp:Comment};
 
 terminal Id_t           /[A-Za-z][A-Za-z0-9]*/  lexer classes {IDENTIFIER};
-terminal Num_t          /[0-9]+/;
+terminal Num_t          /[0-9]+/ lexer classes {lsp:Number};
 
-terminal Or_t		'OR'  precedence = 5, association = left, 
-                              lexer classes { KEYWORD };
-terminal And_t		'&'   precedence = 6, association = left;
+terminal Or_t     'OR'  precedence = 5, association = left, lexer classes { KEYWORD };
+terminal And_t    '&'   precedence = 6, association = left, lexer classes { OP };
+terminal EQ_t		  '='   precedence = 9, association = none, lexer classes { OP };
+terminal NEQ_t	  '#'   precedence = 9, association = none, lexer classes { OP };
+terminal GT_t		  '>'   precedence = 9, association = none, lexer classes { OP };
+terminal LT_t		  '<'   precedence = 9, association = none, lexer classes { OP };
+terminal GTEQ_t	  '>='  precedence = 9, association = none, lexer classes { OP };
+terminal LTEQ_t		'<='  precedence = 9, association = none, lexer classes { OP };
 
-terminal EQ_t		'='   precedence = 9, association = none;
-terminal NEQ_t		'#'   precedence = 9, association = none;
-terminal GT_t		'>'   precedence = 9, association = none;
-terminal LT_t		'<'   precedence = 9, association = none;
-terminal GTEQ_t		'>='  precedence = 9, association = none;
-terminal LTEQ_t		'<='  precedence = 9, association = none;
+terminal Plus_t		  '+'   precedence = 11, association = left, lexer classes { OP };
+terminal Minus_t	  '-'   precedence = 11, association = left, lexer classes { OP };
+terminal Multiply_t	'*'   precedence = 12, association = left, lexer classes { OP };
 
-terminal Plus_t		'+'   precedence = 11, association = left;
-terminal Minus_t	'-'   precedence = 11, association = left;
-terminal Multiply_t	'*'   precedence = 12, association = left;
 terminal Divide_t	'DIV' precedence = 12, association = left,
                               lexer classes { KEYWORD };
 terminal Modulo_t	'MOD' precedence = 12, association = left,

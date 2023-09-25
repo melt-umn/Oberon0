@@ -1,5 +1,7 @@
 grammar edu:umn:cs:melt:Oberon0:constructs:dataStructures:concreteSyntax;
 
+imports silver:langutil:lsp as lsp;
+
 terminal LBrack_t	'[';
 terminal RBrack_t	']';
 
