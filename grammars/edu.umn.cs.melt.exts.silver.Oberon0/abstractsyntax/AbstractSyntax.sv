@@ -12,14 +12,14 @@ abstract production quoteStmt
 top::Expr ::= ast::Oberon0:Stmt
 {
   top.unparse = s"Oberon0_Stmt {${concat(explode("\n", show(80, ast.pp)))}}";
-  forwards to translate(top.location, reflect(new(ast)));
+  forwards to translate(reflect(new(ast)));
 }
 
 abstract production quoteExpr
 top::Expr ::= ast::Oberon0:Expr
 {
   top.unparse = s"Oberon0_Expr {${concat(explode("\n", show(80, ast.pp)))}}";
-  forwards to translate(top.location, reflect(new(ast)));
+  forwards to translate(reflect(new(ast)));
 }
 
 -- Oberon0-to-Silver bridge productions
@@ -43,5 +43,3 @@ top::Oberon0:Name ::= e::Expr
   top.pp = pp"$$Name{${text(e.unparse)}}";
   forwards to error("No forward");
 }
-
-global builtin::Location = txtLoc("silver-Oberon0");
