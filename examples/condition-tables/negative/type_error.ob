@@ -1,0 +1,16 @@
+MODULE TypeError;
+
+TYPE FooRecord = RECORD 
+  x: INTEGER;
+END;
+
+VAR y: FooRecord;
+b: BOOLEAN;
+
+BEGIN
+
+(* This generates a type error since the expressions in the table
+   rows must be a boolean value. *)
+b := TABLE { y : T * F };
+
+END TypeError.

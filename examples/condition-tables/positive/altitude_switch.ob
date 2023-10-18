@@ -1,0 +1,48 @@
+MODULE AltitudeSwitch;
+
+CONST 
+(* status *)
+unknown = 0; above = 1; below = 2;
+(* quality *)
+good = 0; poor = 1;
+
+VAR aq, at, h, a, ps: INTEGER;
+
+  PROCEDURE WriteStatus(altQuality: INTEGER; altThres: INTEGER; 
+                      hyst: INTEGER; altitude: INTEGER; prevStatus: INTEGER);
+    VAR newStatus: INTEGER;
+    PROCEDURE DetermineStatus(altQuality: INTEGER; altThres: INTEGER; 
+                        hyst: INTEGER; altitude: INTEGER; prevStatus: INTEGER);
+    BEGIN
+      IF ( TABLE { prevStatus = unknown      : T *
+                  altQuality = good         : T T
+                  altitude > altThres        : T T
+                  altitude > altThres + hyst : * T })
+        THEN
+          newStatus := above
+      ELSIF ( TABLE { altQuality = good   : T
+                      altitude > altThres : F })
+        THEN
+          newStatus := below
+      ELSIF ( altQuality = good )
+        THEN
+          newStatus := unknown
+      ELSE newStatus := prevStatus
+      END;
+  END DetermineStatus;
+BEGIN
+  DetermineStatus(altQuality, altThres, hyst, altitude, prevStatus);
+  Write(newStatus); WriteLn();
+END WriteStatus;
+BEGIN
+  (* define some sample sensor readings and settings *)
+  aq := good;
+  at := 1500;
+  h := 50;
+  a := 2500;
+  ps := unknown;
+
+  (* should write 1 for status above *)
+  WriteStatus(aq, at, h, a, ps);
+
+END AltitudeSwitch.
