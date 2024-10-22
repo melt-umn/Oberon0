@@ -13,12 +13,12 @@ t::TypeExpr ::= id::TypeName
 aspect production integerTypeExpr
 t::TypeExpr ::=
 {
-  t.lifted = t;
+  t.lifted = ^t;
 }
 
 aspect production booleanTypeExpr
 t::TypeExpr ::=
 {
-  t.lifted = t;
+  t.lifted = ^t;
 }
 

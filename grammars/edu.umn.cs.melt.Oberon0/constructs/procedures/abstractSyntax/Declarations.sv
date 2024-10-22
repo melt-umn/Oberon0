@@ -28,7 +28,7 @@ d::Decl ::= id::Name t::TypeExpr
    propagate env;
   --T2-end
   
-  forwards to varDecl(id, t, location=d.location);
+  forwards to varDecl(@id, @t, location=d.location);
 }
 
 abstract production paramDeclReference
@@ -43,7 +43,7 @@ d::Decl ::= id::Name t::TypeExpr
    propagate env;
   --T2-end
 
-  forwards to varDecl(id, t, location=d.location);
+  forwards to varDecl(@id, @t, location=d.location);
 }
 
   --T2-start

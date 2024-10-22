@@ -5,7 +5,7 @@ aspect production arrayAccess
 e::LExpr ::= array::LExpr index::Expr
 {
   e.type = case array.type of
-           | arrayType(_, ty1,_) -> ty1
+           | arrayType(_, ty1,_) -> ^ty1
            | _ -> errorType()
            end;
   e.errors <- if check(index.type, integerType()) then []

@@ -10,7 +10,7 @@ s::Stmt ::= e::Expr cs::Cases
 
   propagate errors, env;  --T2
 
-  cs.caseExpr = e;
+  cs.caseExpr = ^e;
   cs.caseNext = skip(location=cs.location);
   forwards to cs.caseTranslation;
 }
@@ -34,7 +34,7 @@ inherited attribute caseNext :: Stmt;
 
 nonterminal Cases with location, env, errors, pp, caseTranslation<Stmt>, caseExpr, caseNext;
 
-propagate errors, caseExpr, caseNext, env on Cases;  --T2
+propagate errors, caseExpr, env on Cases;  --T2
 
 abstract production caseOne
 cs::Cases ::= c::Case
@@ -42,6 +42,7 @@ cs::Cases ::= c::Case
   cs.pp = c.pp;
   
   cs.caseTranslation = c.caseTranslation;
+  c.caseNext = cs.caseNext;
 }
 abstract production caseCons
 cs::Cases ::= c::Case rest::Cases
@@ -55,6 +56,7 @@ cs::Cases ::= c::Case rest::Cases
   --T2-start  
   cs.caseTranslation = c.caseTranslation;
   c.caseNext = rest.caseTranslation;
+  rest.caseNext = cs.caseNext;
   --T2-end
 }
 
@@ -67,14 +69,14 @@ c::Case ::= cls::CaseLabels s::Stmt
 {
   c.pp = pp:ppConcat([cls.pp, pp:text(" : "), s.pp]);
   
-  c.caseTranslation = cond(cls.caseTranslation, s, c.caseNext, location=c.location);
+  c.caseTranslation = cond(cls.caseTranslation, ^s, c.caseNext, location=c.location);
 }
 abstract production caseElse
 c::Case ::= s::Stmt
 {
   c.pp = pp:cat(pp:text("ELSE "), s.pp);
   
-  c.caseTranslation = s;
+  c.caseTranslation = ^s;
 }
 
 nonterminal CaseLabels with location, env, errors, pp, caseTranslation<Expr>, caseExpr;
@@ -105,7 +107,7 @@ cl::CaseLabel ::= e::Expr
 {
   cl.pp = e.pp;
   
-  cl.caseTranslation = eqOp(cl.caseExpr, e, location=cl.location);
+  cl.caseTranslation = eqOp(cl.caseExpr, ^e, location=cl.location);
   --T2-start
   cl.errors <- if e.evalConstInt.isJust then []
                else [err(e.location, "CASE label " ++ pp:show(100, e.pp) ++ " is not a constant")];
@@ -116,7 +118,7 @@ cl::CaseLabel ::= l::Expr u::Expr
 {
   cl.pp = pp:ppConcat([l.pp, pp:text(".."), u.pp]);
   
-  cl.caseTranslation = Oberon0_Expr { $Expr{cl.caseExpr} >= $Expr{l} & $Expr{cl.caseExpr} <= $Expr{u} };
+  cl.caseTranslation = Oberon0_Expr { $Expr{cl.caseExpr} >= $Expr{^l} & $Expr{cl.caseExpr} <= $Expr{^u} };
 
   --T2-start
   cl.errors <- if l.evalConstInt.isJust then []

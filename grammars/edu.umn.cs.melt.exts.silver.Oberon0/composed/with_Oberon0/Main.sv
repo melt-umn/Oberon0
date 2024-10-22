@@ -8,8 +8,4 @@ parser svParse::Root {
   edu:umn:cs:melt:exts:silver:Oberon0;
 }
 
-function main 
-IOVal<Integer> ::= args::[String] ioin::IOToken
-{
-  return evalIO(cmdLineRun(args, svParse), ioin);
-}
+fun main IO<Integer> ::= args::[String] = cmdLineRun(args, svParse);

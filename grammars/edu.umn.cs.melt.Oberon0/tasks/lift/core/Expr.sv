@@ -26,7 +26,7 @@ aspect production number
 e::Expr ::= n::String
 {
   e.freevars = [ ];
-  e.lifted = e;
+  e.lifted = ^e;
 }
 
 aspect production mulOp

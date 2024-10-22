@@ -21,14 +21,14 @@ concrete productions top::silver:Expr
 concrete productions top::Stmt_c
 | '$Stmt' '{' e::silver:Expr '}'
   layout {silver:WhiteSpace}
-  { top.ast = antiquoteStmt(e, location=getParsedOriginLocationOrFallback(top)); }
+  { top.ast = antiquoteStmt(^e, location=getParsedOriginLocationOrFallback(top)); }
 
 concrete productions top::Expr_c
 | '$Expr' '{' e::silver:Expr '}'
   layout {silver:WhiteSpace}
-  { top.ast = antiquoteExpr(e, location=getParsedOriginLocationOrFallback(top)); }
+  { top.ast = antiquoteExpr(^e, location=getParsedOriginLocationOrFallback(top)); }
 
 concrete productions top::Name_c
 | '$Name' '{' e::silver:Expr '}'
   layout {silver:WhiteSpace}
-  { top.ast = antiquoteName(e, location=getParsedOriginLocationOrFallback(top)); }
+  { top.ast = antiquoteName(^e, location=getParsedOriginLocationOrFallback(top)); }

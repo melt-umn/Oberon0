@@ -89,9 +89,6 @@ d::Decl ::= d1::Decl d2::Decl
  - Used to filter declarations down to just procedures for pretty printing purposes.
  -}
   --T2-start
-function isProcDcl
-Boolean ::= d::Decorated Decl
-{
-  return case d of procDecl(_,_,_,_,_) -> true | _ -> false end;
-}
+fun isProcDcl Boolean ::= d::Decorated Decl =
+  case d of procDecl(_,_,_,_,_) -> true | _ -> false end;
   --T2-end

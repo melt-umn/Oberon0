@@ -33,9 +33,9 @@ terminal Minus_t	  '-'   precedence = 11, association = left, lexer classes { OP
 terminal Multiply_t	'*'   precedence = 12, association = left, lexer classes { OP };
 
 terminal Divide_t	'DIV' precedence = 12, association = left,
-                              lexer classes { KEYWORD };
+                        lexer classes { KEYWORD };
 terminal Modulo_t	'MOD' precedence = 12, association = left,
-                              lexer classes { KEYWORD };
+                        lexer classes { KEYWORD };
 
 terminal Not_t		'~'   precedence = 15;
 

@@ -11,6 +11,6 @@ aspect production fieldAccess
 e::LExpr ::= rec::LExpr fld::Name
 {
   e.freevars = rec.freevars;
-  e.lifted = fieldAccess(rec.lifted, fld, location=e.location); -- no renaming done on field names
+  e.lifted = fieldAccess(rec.lifted, ^fld, location=e.location); -- no renaming done on field names
 }
 

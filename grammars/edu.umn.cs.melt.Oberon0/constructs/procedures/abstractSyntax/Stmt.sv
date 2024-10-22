@@ -10,10 +10,10 @@ s::Stmt ::= f::Name a::Exprs
   -- One could also put something in the environment for these names, but
   -- we're explicitly treat them specially here.
   forwards to case f.name of
-              | "Write"   -> writeCall(f, a, location=s.location)
-              | "WriteLn" -> writeLnCall(f, a, location=s.location)
-              | "Read"    -> readCall(f, a, location=s.location)
-              | _ -> call(f, a, location=s.location)
+              | "Write"   -> writeCall(@f, @a, location=s.location)
+              | "WriteLn" -> writeLnCall(@f, @a, location=s.location)
+              | "Read"    -> readCall(@f, @a, location=s.location)
+              | _ -> call(@f, @a, location=s.location)
               end;
 }
 

@@ -17,7 +17,7 @@ s::Stmt ::= id::Name lower::Expr upper::Expr body::Stmt
       pp:nestlines(2, body.pp),
     pp:text("DONE")]);
 
-  forwards to forStmtBy(id, lower, upper, number("1", location=id.location), body, location=s.location);
+  forwards to forStmtBy(@id, @lower, @upper, number("1", location=id.location), @body, location=s.location);
 }
 
 abstract production forStmtBy
@@ -45,15 +45,15 @@ s::Stmt ::= id::Name lower::Expr upper::Expr step::Expr body::Stmt
   -- Choose the comparison operator based on whether we're increasing or decreasing
   local comparison :: Expr =
     if step.evalConstInt.isJust && step.evalConstInt.fromJust < 0
-    then Oberon0_Expr { $Name{id} >= $Expr{upper} }
-    else Oberon0_Expr { $Name{id} <= $Expr{upper} };
+    then Oberon0_Expr { $Name{^id} >= $Expr{@upper} }
+    else Oberon0_Expr { $Name{^id} <= $Expr{@upper} };
 
   forwards to
     Oberon0_Stmt {
-      $Name{id} := $Expr{lower};
-      WHILE $Expr{comparison} DO
-        $Stmt{body};
-        $Name{id} := $Name{id} + $Expr{step};
+      $Name{@id} := $Expr{@lower};
+      WHILE $Expr{@comparison} DO
+        $Stmt{@body};
+        $Name{^id} := $Name{^id} + $Expr{@step};
       END
     };
 }

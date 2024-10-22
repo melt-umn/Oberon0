@@ -19,7 +19,7 @@ function findDclOnName
 {
 
   return case n.lookupName of
-    | just(dcl) -> [(n.location, dcl)]
+    | just(dcl) -> [(n.location, ^dcl)]
     | _ -> []
     end;
 

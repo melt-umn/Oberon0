@@ -22,11 +22,8 @@ propagate env on Decl excluding seqDecl;
 {--
  - Lines up all decls by their left edge.
  -}
-function ppDecls
-pp:Document ::= pre::String dcls::[Decorated Decl]
-{
-  return pp:ppConcat([pp:text(pre), pp:box(pp:ppImplode(pp:cat(pp:semi(), pp:line()), map((.pp), dcls))), pp:semi()]);
-}
+fun ppDecls pp:Document ::= pre::String dcls::[Decorated Decl] =
+  pp:ppConcat([pp:text(pre), pp:box(pp:ppImplode(pp:cat(pp:semi(), pp:line()), map((.pp), dcls))), pp:semi()]);
 abstract production seqDecl
 d::Decl ::= d1::Decl d2::Decl
 {
@@ -157,7 +154,7 @@ d::Decl ::= ids::IdList t::TypeExpr
               then forward.errors
               else t.errors;
 
-  ids.idVarDeclTypeExpr = t;
+  ids.idVarDeclTypeExpr = ^t;
   ids.idVarDeclProd = varDecl(_, _, location=_);
   --T2-end
 
@@ -193,7 +190,7 @@ abstract production idListOne
 ids::IdList ::= id::Name
 {
   ids.pp = id.pp;
-  ids.idVarDecls = ids.idVarDeclProd(id, ids.idVarDeclTypeExpr, id.location);  --T2
+  ids.idVarDecls = ids.idVarDeclProd(^id, ids.idVarDeclTypeExpr, id.location);  --T2
 }
 
 abstract production idListCons
@@ -201,26 +198,15 @@ ids::IdList ::= id::Name rest::IdList
 {
   ids.pp = pp:ppConcat([id.pp, pp:text(", "), rest.pp]);
   --T2-start
-  ids.idVarDecls = seqDecl(ids.idVarDeclProd(id, ids.idVarDeclTypeExpr, id.location),
+  ids.idVarDecls = seqDecl(ids.idVarDeclProd(^id, ids.idVarDeclTypeExpr, id.location),
                            rest.idVarDecls, location=ids.location); 
   --T2-end
 }
 
 
   --T2-start
-function isConstDcl
-Boolean ::= d::Decorated Decl
-{
-  return case d of constDecl(_,_) -> true | _ -> false end;
-}
-function isTypeDcl
-Boolean ::= d::Decorated Decl
-{
-  return case d of typeDecl(_,_) -> true | _ -> false end;
-}
-function isVarsDcl
-Boolean ::= d::Decorated Decl
-{
-  return case d of varDecl(_,_) -> true | varDecls(_,_) -> true | _ -> false end;
-}
+fun isConstDcl Boolean ::= d::Decorated Decl = case d of constDecl(_,_) -> true | _ -> false end;
+fun isTypeDcl Boolean ::= d::Decorated Decl = case d of typeDecl(_,_) -> true | _ -> false end;
+fun isVarsDcl Boolean ::= d::Decorated Decl =
+  case d of varDecl(_,_) -> true | varDecls(_,_) -> true | _ -> false end;
   --T2-end

@@ -142,11 +142,7 @@ e::Defs ::= s::String  d::Decorated Decl
  - Now we have the lookup operations on the environment.
  -}
 
-function lookupDecl
-Maybe<Decorated Decl> ::= s::String e::Env
-{
-  return lookupValue(s,e) ;
-}
+fun lookupDecl Maybe<Decorated Decl> ::= s::String e::Env = lookupValue(s,e);
 
 
 
@@ -154,11 +150,7 @@ Maybe<Decorated Decl> ::= s::String e::Env
 {--
  - A helper that adapts a list to a Maybe, discarding any extra elements in the list.
  -}
-function adapt
-Maybe<a> ::= l::[a]
-{
-  return if null(l) then nothing() else just(head(l));
-}
+fun adapt Maybe<a> ::= l::[a] = if null(l) then nothing() else just(head(l));
 
 {--
  - A helper that looks a name up in each scope.
@@ -166,45 +158,29 @@ Maybe<a> ::= l::[a]
  - Thanks to laziness, it's not inefficient to use this, as we'll only
  - actually do the lookup as far as gets demanded in the scope list.
  -}
-function lookupInScopes
-[Maybe<a>] ::= s::String ss::[tm:Map<String a>]
-{
-  return map(adapt, map(tm:lookup(s,_), ss));
-}
+fun lookupInScopes [Maybe<a>] ::= s::String ss::[tm:Map<String a>] =
+  map(adapt, map(tm:lookup(s,_), ss));
 
 {--
  - Looks up a type in the nearest scope containing it.
  -}
-function lookupType
-Maybe<Decorated Decl> ::= s::String e::Env
-{
-  return foldr(orElse, nothing(), lookupInScopes(s, e.types));
-}
+fun lookupType Maybe<Decorated Decl> ::= s::String e::Env =
+  foldr(orElse, nothing(), lookupInScopes(s, e.types));
 
 {--
  - Looks up a value in the nearest scope containing it.
  -}
-function lookupValue
-Maybe<Decorated Decl> ::= s::String e::Env
-{
-  return foldr(orElse, nothing(), lookupInScopes(s, e.values));
-}
+fun lookupValue Maybe<Decorated Decl> ::= s::String e::Env =
+  foldr(orElse, nothing(), lookupInScopes(s, e.values));
 
 {--
  - Looks up a type in the most-local scope ONLY.
  -}
-function lookupTypeInScope
-Maybe<Decorated Decl> ::= s::String e::Env
-{
-  return head(lookupInScopes(s,e.types));
-}
+fun lookupTypeInScope Maybe<Decorated Decl> ::= s::String e::Env = head(lookupInScopes(s,e.types));
 
 {--
  - Looks up a value in the most-local scope ONLY.
  -}
-function lookupValueInScope
-Maybe<Decorated Decl> ::= s::String e::Env
-{
-  return head(lookupInScopes(s,e.values));
-}
+fun lookupValueInScope Maybe<Decorated Decl> ::= s::String e::Env =
+  head(lookupInScopes(s,e.values));
 

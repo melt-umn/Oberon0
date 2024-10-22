@@ -37,8 +37,8 @@ d::Decl ::= id::Name formals::Decl ld::Decl s::Stmt endid::Name
   -- read: Take all free variables mention in body, plus all free variables mentioned in
   -- called child procedure's sol sets, and add them.
 
-  local liftedId :: Name = name(d.liftedName, location=id.location);
-  local thisAsLifted::Decl = procDecl(liftedId, extendedParams(d.sol, formals.lifted), ld.lifted, s.lifted, liftedId, location=d.location);
+  nondecorated local liftedId :: Name = name(d.liftedName, location=id.location);
+  nondecorated local thisAsLifted::Decl = procDecl(liftedId, extendedParams(d.sol, formals.lifted), ld.lifted, s.lifted, liftedId, location=d.location);
 
   d.lifted = if d.enclosingProcedure.isJust
              then -- this one is lifted and inserted higher up
@@ -66,15 +66,15 @@ d::Decl ::= id::Name formals::Decl ld::Decl s::Stmt endid::Name
 function extendedParams
 Decl ::= toAdd::[Decorated Decl] prev::Decl
 {
-  return if null(toAdd) then prev
+  return if null(toAdd) then ^prev
          else if !d.enclosingProcedure.isJust {- at top level -} then rest
          else seqDecl(liftedVarDeclToReference, rest, location=d.location);
 
   local d::Decorated Decl = head(toAdd);
-  local rest::Decl = extendedParams(tail(toAdd), prev);
-  local liftedVarDeclToReference :: Decl =
+  nondecorated local rest::Decl = extendedParams(tail(toAdd), ^prev);
+  nondecorated local liftedVarDeclToReference :: Decl =
     case d.lifted of
-    | varDecl(n,t) -> paramDeclReference(n, t, location=d.location)
+    | varDecl(n,t) -> paramDeclReference(^n, ^t, location=d.location)
     end;
 }
 

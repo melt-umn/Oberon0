@@ -13,7 +13,7 @@ m::Module ::= id::Name ds::Decl ss::Stmt endid::Name
      the top level.
    -}
 
-  m.lifted = module(id, ds.lifted, ss.lifted, endid, location=m.location);
+  m.lifted = module(^id, ds.lifted, ss.lifted, ^endid, location=m.location);
   
   -- Reserve C keywords before we even begin. Makes translation easy-peasy!
   ds.universalNamesIn = ["auto", "break", "case", "char", "const", "continue",

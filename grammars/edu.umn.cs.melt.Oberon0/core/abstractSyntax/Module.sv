@@ -47,7 +47,7 @@ function aprioriTypeDecl
 Defs ::= n::String  t::TypeExpr
 {
   production attribute fakedDecl :: Decl;
-  fakedDecl = typeDecl(typeName(n, location=aprioriLoc), t, location=aprioriLoc);
+  fakedDecl = typeDecl(typeName(n, location=aprioriLoc), @t, location=aprioriLoc);
   fakedDecl.env = emptyEnv();  
 
   return typeDef(n, fakedDecl);
@@ -57,7 +57,7 @@ function aprioriConstDecl
 Defs ::= n::String  e::Expr
 {
   production attribute fakedDecl :: Decl;
-  fakedDecl = constDecl(name(n, location=aprioriLoc), e, location=aprioriLoc);
+  fakedDecl = constDecl(name(n, location=aprioriLoc), @e, location=aprioriLoc);
   fakedDecl.env = emptyEnv();  
   
   return valueDef(n, fakedDecl);

@@ -21,7 +21,7 @@ aspect production nilExprs
 es::Exprs ::=
 {
   es.freevars = [];
-  es.lifted = es;
+  es.lifted = ^es;
 }
 
 
@@ -41,13 +41,13 @@ es::Exprs ::= e::Expr rest::Exprs
 function extendedArgs
 Exprs ::= toAdd::[Decorated Decl] prev::Exprs
 {
-  return if null(toAdd) then prev
+  return if null(toAdd) then ^prev
          else if !d.enclosingProcedure.isJust {- at top level -} then rest
          else consExprs(newArgRef, rest, location=d.location);
 
   local d::Decorated Decl = head(toAdd);
-  local rest::Exprs = extendedArgs(tail(toAdd), prev);
-  local newArgRef :: Expr =
+  nondecorated local rest::Exprs = extendedArgs(tail(toAdd), ^prev);
+  nondecorated local newArgRef :: Expr =
     lExpr(idAccess(name(d.liftedName, location=prev.location), location=prev.location), location=prev.location);
 }
 
@@ -56,18 +56,18 @@ aspect production readCall
 s::Stmt ::= f::Name e::Exprs
 {
   s.freevars = e.freevars;
-  s.lifted = readCall(f, e.lifted, location=s.location);
+  s.lifted = readCall(^f, e.lifted, location=s.location);
 }
 aspect production writeCall
 s::Stmt ::= f::Name e::Exprs
 {
   s.freevars = e.freevars;
-  s.lifted = writeCall(f, e.lifted, location=s.location);
+  s.lifted = writeCall(^f, e.lifted, location=s.location);
 }
 aspect production writeLnCall
 s::Stmt ::= f::Name e::Exprs
 {
   s.freevars = e.freevars;
-  s.lifted = writeLnCall(f, e.lifted, location=s.location);
+  s.lifted = writeLnCall(^f, e.lifted, location=s.location);
 }
 

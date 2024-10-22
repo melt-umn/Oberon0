@@ -9,6 +9,6 @@ t::TypeExpr ::= e::Expr ty::TypeExpr
 aspect production recordTypeExpr
 t::TypeExpr ::= f::Decl
 {
-  t.lifted = t; -- no renaming done on field names.
+  t.lifted = ^t; -- no renaming done on field names.
 }
 

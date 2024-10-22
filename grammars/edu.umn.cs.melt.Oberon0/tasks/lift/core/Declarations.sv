@@ -52,7 +52,7 @@ d::Decl ::= d1::Decl d2::Decl
 aspect production noDecl
 d::Decl ::=
 {
-  d.lifted = d;
+  d.lifted = ^d;
   d.liftedDecls = [];
 
   d.liftedName = error("Not applicable to sequences");
@@ -71,7 +71,7 @@ d::Decl ::= id::Name e::Expr
   d.lifted = if !d.enclosingProcedure.isJust then lifted else noDecl(location=d.location);
   d.liftedDecls = if !d.enclosingProcedure.isJust then [] else [lifted];
   
-  local lifted :: Decl = constDecl(name(d.liftedName, location=id.location), e, location=d.location);
+  nondecorated local lifted :: Decl = constDecl(name(d.liftedName, location=id.location), ^e, location=d.location);
   
   d.liftedName = uniqueName(id.name, d.universalNamesIn);
   d.universalNamesOut = d.liftedName :: d.universalNamesIn;
@@ -86,7 +86,7 @@ d::Decl ::= id::TypeName t::TypeExpr
   d.lifted = if !d.enclosingProcedure.isJust then lifted else noDecl(location=d.location);
   d.liftedDecls = if !d.enclosingProcedure.isJust then [] else [lifted];
   
-  local lifted :: Decl = typeDecl(typeName(d.liftedName, location=id.location), t.lifted, location=d.location);
+  nondecorated local lifted :: Decl = typeDecl(typeName(d.liftedName, location=id.location), t.lifted, location=d.location);
   
   d.liftedName = uniqueName(id.name, d.universalNamesIn);
   d.universalNamesOut = d.liftedName :: d.universalNamesIn;

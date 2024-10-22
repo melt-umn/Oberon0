@@ -31,7 +31,7 @@ abstract production nominalType
 t::TypeRep ::= n::String real::TypeRep
 {
   t.pp = pp:text(n);
-  forwards to real;
+  forwards to @real;
 }
 
 abstract production integerType
@@ -90,7 +90,7 @@ Boolean ::= t1::TypeRep t2::TypeRep
 function checkErrors
 [Message] ::= actual::TypeRep  expected::TypeRep  object::String  l::Location
 {
-  return if check(actual, expected) then []
+  return if check(^actual, ^expected) then []
          else [err(l, object ++ " was expected to have type " ++ pp:show(100, expected.pp) ++
                  ", but instead has type " ++ pp:show(100, actual.pp))];
 }
