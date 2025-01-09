@@ -2,7 +2,7 @@ grammar edu:umn:cs:melt:exts:silver:Oberon0:composed:with_Oberon0;
 
 import silver:compiler:host;
 
-parser svParse::Root {
+parser svParse::File {
   silver:compiler:host;
   
   edu:umn:cs:melt:exts:silver:Oberon0;
