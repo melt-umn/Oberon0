@@ -1,0 +1,11 @@
+MODULE MismatchedRows;
+
+VAR b: BOOLEAN;
+
+BEGIN
+
+b := TABLE { TRUE  : T F *
+             FALSE : F * F F
+             TRUE  : T * F   };
+
+END MismatchedRows.
